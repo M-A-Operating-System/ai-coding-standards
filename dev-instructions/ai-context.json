@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "description": "Coding Standards and Guidelines for AI Agents",
+  "entry_point": "./master_instructions.md",
+  "standards": {
+    "architecture": "./architecture_principles.md",
+    "security": "./security_standards.md",
+    "testing": "./testing_standards.md",
+    "ops": "./ops_standards.md",
+    "documentation": "./documentation_standards.md",
+    "data": "./data_standards.md",
+    "forbidden": "./forbidden_patterns.md"
+  },
+  "languages": {
+    "python": {
+      "root": "./languages/python/master_instructions.md",
+      "style": "./languages/python/coding_standards.md",
+      "testing": "./languages/python/testing_implementation.md"
+    },
+    "typescript": {
+      "root": "./languages/typescript/master_instructions.md",
+      "style": "./languages/typescript/coding_standards.md",
+      "testing": "./languages/typescript/testing_implementation.md"
+    }
+  },
+  "data": {
+    "postgres": {
+      "style": "./data/postgres_standards.md"
+    }
+  },
+  "instructions": "When generating code, first identify the target language. Then, load the 'root' instruction file for that language. Always cross-reference with the global 'standards' files."
+}

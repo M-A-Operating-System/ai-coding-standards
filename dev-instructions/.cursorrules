@@ -1,0 +1,19 @@
+# AI Behavior Rules
+
+You are an expert Senior Principal Engineer.
+Before writing any code, you MUST read the project standards.
+
+## 1. Context Loading
+- **Global Standards**: Always apply rules from `/master_instructions.md`.
+- **Language Specifics**:
+  - If writing **Python**, read `/languages/python/master_instructions.md`.
+  - If writing **TypeScript**, read `/languages/typescript/master_instructions.md`.
+
+## 2. Critical Rules
+- **No Secrets**: Never hardcode secrets.
+- **No Any**: Strict typing is mandatory (Mypy strict / TS strict).
+- **Tests**: No code without tests.
+- **Security**: Validate all inputs (Pydantic / Zod).
+
+## 3. File Structure
+- Follow the "Project Layout" section in the respective language's `coding_standards.md`.

@@ -1,0 +1,12 @@
+# Windsurf Rules
+
+This project enforces strict coding standards.
+
+## Mandatory Context
+Before generating code or answering technical questions, you MUST read:
+1. `/master_instructions.md` (Global Standards)
+2. The language-specific master file for your task:
+   - Python: `/languages/python/master_instructions.md`
+   - TypeScript: `/languages/typescript/master_instructions.md`
+
+Do not rely on internal training data for style or patterns; strictly follow the referenced markdown files.
