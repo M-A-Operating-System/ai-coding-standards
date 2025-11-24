@@ -1,4 +1,4 @@
-# TypeScript Security Implementation
+# TypeScript Security Standards
 Implementation of: /security_standards.md
 
 ## Relationship to Standards

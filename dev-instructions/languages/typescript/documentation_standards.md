@@ -1,4 +1,4 @@
-# TypeScript Documentation Implementation
+# TypeScript Documentation Standards
 Implementation of: /documentation_standards.md
 
 ## Relationship to Standards

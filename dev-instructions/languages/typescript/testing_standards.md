@@ -1,4 +1,4 @@
-# TypeScript Testing Implementation
+# TypeScript Testing Standards
 Implementation of: /testing_standards.md
 
 ## Relationship to Standards

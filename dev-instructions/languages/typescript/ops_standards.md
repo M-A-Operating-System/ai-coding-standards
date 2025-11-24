@@ -1,4 +1,4 @@
-# TypeScript CI/CD Implementation
+# TypeScript Operations Standards
 Implementation of: /ops_standards.md
 
 ## Relationship to Standards

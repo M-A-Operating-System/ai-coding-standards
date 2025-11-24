@@ -1,8 +1,8 @@
 # TypeScript Coding Standards
-Implementation of: /master_instructions.md
+Implementation of: /master_standards.md
 
 ## Relationship to Standards
-This file provides the TypeScript-specific implementation ("How") for the general coding and style guidelines defined in `/master_instructions.md` ("What").
+This file provides the TypeScript-specific implementation ("How") for the general coding and style guidelines defined in `/master_standards.md` ("What").
 
 ## Compiler & Runtime
 - **Runtime**: Node.js LTS.

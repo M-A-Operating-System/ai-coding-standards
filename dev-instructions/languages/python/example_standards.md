@@ -1,8 +1,8 @@
 # Python Examples & Templates
-Implementation of: /master_instructions.md
+Implementation of: /master_standards.md
 
 ## Relationship to Standards
-This file provides the Python-specific implementation ("How") for the code templates and patterns requested in `/master_instructions.md` ("What").
+This file provides the Python-specific implementation ("How") for the code templates and patterns requested in `/master_standards.md` ("What").
 
 ## Template 1: Pydantic Settings
 ```python

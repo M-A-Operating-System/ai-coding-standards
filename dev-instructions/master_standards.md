@@ -19,17 +19,23 @@ Before generating any code, you must output a brief **Plan of Action**:
 ## 3. Documentation Hierarchy
 You must follow the "What vs. How" hierarchy:
 1.  **Standards (Root Directory)**: The "What". Universal principles that apply across all languages.
-    - `architecture_principles.md`: The Five-View Framework.
+    - `architecture_standards.md`: The Five-View Framework.
     - `security_standards.md`: OWASP/NIST controls.
     - `testing_standards.md`: Quality gates and strategies.
     - `ops_standards.md`: CI/CD and observability.
     - `documentation_standards.md`: ADRs and READMEs.
-    - `forbidden_patterns.md`: Universally banned patterns.
-2.  **Instructions (`/languages/<language>/`)**: The "How". Language-specific implementation details.
+    - `data_standards.md`: Data modeling and database principles.
+    - `api_standards.md`: RESTful API design principles.
+    - `frontend_standards.md`: User interface standards.
+    - `tools_standards.md`: Enterprise tool selection and usage.
+    - `common_scenarios.md`: Guidelines for common development scenarios.
+    - `forbidden_standards.md`: Universally banned patterns.
+2. **Instructions (`/languages/<language>/`)**: The "How". Language-specific implementation details.
     - You must look for the subdirectory matching the target language (e.g., `languages/python/`).
     - These files define the specific libraries, linters, and syntax to achieve the Standards.
 
 ## 4. Universal Directive
+
 - **Explicit over Implicit**: Do not rely on "magic" behavior.
 - **Secure by Default**: Never generate code with hardcoded secrets.
 - **Testable**: All code must be testable in isolation.

@@ -2,16 +2,21 @@
 # This file provides a map of the project's documentation for AI agents.
 
 # Global Entry Point
-- [Master Instructions](master_instructions.md) - START HERE. Defines the persona, chain of thought, and document hierarchy.
+- [Master Standards](master_standards.md) - START HERE. Defines the persona, chain of thought, and document hierarchy.
 
 # Core Standards (The "What")
-- [Architecture Principles](architecture_principles.md) - The Five-View Architecture framework.
+- [Architecture Standards](architecture_standards.md) - The Five-View Architecture framework.
 - [Security Standards](security_standards.md) - OWASP/NIST controls and security requirements.
 - [Testing Standards](testing_standards.md) - Testing strategies, pyramids, and quality gates.
 - [Operations Standards](ops_standards.md) - CI/CD, observability, and deployment rules.
 - [Documentation Standards](documentation_standards.md) - ADRs, READMEs, and code comments.
-- [Forbidden Patterns](forbidden_patterns.md) - Universally banned coding patterns.
+- [API Standards](api_standards.md) - RESTful API design and implementation principles.
+- [Frontend Standards](frontend_standards.md) - User interface and frontend application standards.
+- [Data Standards](data_standards.md) - Data modeling and database standards.
+- [Tools Standards](tools_standards.md) - Enterprise tool selection and usage guidelines.
+- [Common Scenarios](common_scenarios.md) - Guidelines for common development scenarios.
+- [Forbidden Standards](forbidden_standards.md) - Universally banned coding patterns.
 
 # Language Implementations (The "How")
-- [Python Instructions](languages/python/master_instructions.md) - Python-specific implementation details.
-- [TypeScript Instructions](languages/typescript/master_instructions.md) - TypeScript-specific implementation details.
+- [Python Standards](languages/python/master_standards.md) - Python-specific implementation details.
+- [TypeScript Standards](languages/typescript/master_standards.md) - TypeScript-specific implementation details.

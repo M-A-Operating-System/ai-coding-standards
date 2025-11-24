@@ -1,4 +1,4 @@
-# Python CI/CD Implementation
+# Python Operations Standards
 Implementation of: /ops_standards.md
 
 ## Relationship to Standards
