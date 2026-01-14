@@ -2,7 +2,7 @@ param(
   [string]$BaseUrl,
   [string]$Email,
   [string]$ApiToken,
-  [string]$SourceDir = "ai-agile/confluence",
+  [string]$SourceDir = "agile-ai/source-material/confluence",
   [switch]$DryRun
 )
 
@@ -11,20 +11,28 @@ param(
 # It reads .xhtml files from a source directory, parses the front-matter for metadata,
 # and uses the Confluence API to update the corresponding pages.
 
+Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # Load .env if present to set folder-scoped env vars
 $envPath = Join-Path -Path (Get-Location) -ChildPath '.env'
 if (Test-Path $envPath) {
-  foreach ($line in Get-Content -LiteralPath $envPath) {
-    if ($line -match '^\s*#') { continue }
-    if ($line -match '^(?<k>[A-Za-z_][A-Za-z0-9_]*)=(?<v>.*)$') {
-      $key = $Matches['k']
-      $val = $Matches['v']
-      [Environment]::SetEnvironmentVariable($key, $val, 'Process')
+    foreach ($line in Get-Content -LiteralPath $envPath) {
+        if ($line -match '^\s*#') { continue }
+                if ($line -match '^(?<k>[A-Za-z_][A-Za-z0-9_]*)=(?<v>.*)$') {
+                        $key = $Matches['k']
+                        $val = $Matches['v']
+                        Set-Item -Path "Env:$key" -Value $val
+        }
     }
-  }
+} else {
+    Write-Warning ".env file not found in $((Get-Location).Path). Credentials may be missing."
 }
+
+# After loading .env, check required variables
+if (-not $env:CONF_EMAIL) { Write-Warning "CONF_EMAIL not set after loading .env." }
+if (-not $env:CONF_TOKEN) { Write-Warning "CONF_TOKEN not set after loading .env." }
+if (-not $env:BASE_URL) { Write-Warning "BASE_URL not set after loading .env." }
 
 # Try to load config from SourceDir/confluence.config (Simple Key=Value format)
 $configPath = Join-Path -Path $SourceDir -ChildPath 'confluence.config'
@@ -120,24 +128,6 @@ function Get-StringHash {
     return [System.BitConverter]::ToString($hashBytes).Replace('-', '').ToLowerInvariant()
 }
 
-# Safely escape a string for embedding inside JSON string literal
-function Escape-JsonString {
-    param([string]$Text)
-    if ($null -eq $Text) { return "" }
-    # Remove illegal JSON control characters except TAB (\u0009), LF (\u000A), CR (\u000D)
-    $sanitized = [regex]::Replace($Text, "[^\u0009\u000A\u000D\u0020-\uFFFF]", "")
-    # Encode for JavaScript/JSON string literal
-    try {
-        return [System.Web.HttpUtility]::JavaScriptStringEncode($sanitized)
-    } catch {
-        # Fallback manual escaping
-        $escaped = $sanitized -replace '\\', '\\\\'
-        $escaped = $escaped -replace '"', '\\"'
-        $escaped = $escaped -replace "\r", "\\r" -replace "\n", "\\n" -replace "\t", "\\t"
-        return $escaped
-    }
-}
-
 function Get-MacroCounts {
     param([string]$Content)
     $counts = @{}
@@ -201,7 +191,7 @@ if (-not (Test-ConfluenceAuth -Headers $headers)) {
 }
 Write-Host "Authentication successful."
 
-$filesToUpload = Get-ChildItem -Path $SourceDir -Filter "*.xhtml" -File
+$filesToUpload = @(Get-ChildItem -Path $SourceDir -Filter "*.xhtml" -File)
 if ($filesToUpload.Count -eq 0) {
     Write-Host "No .xhtml files found in '$SourceDir'. Nothing to upload."
     exit
@@ -265,23 +255,20 @@ foreach ($file in $filesToUpload) {
         
         Write-Host "  - Current version: $currentVersion. Updating to version: $newVersion."
 
-                # Prepare safe JSON with robust string escaping for large XHTML content
-                $escapedBody = Escape-JsonString -Text $body
-                $safeTitle = Escape-JsonString -Text $currentPage.title
-                $payload = @"
-{
-    "id": "$pageId",
-    "type": "page",
-    "title": "$safeTitle",
-    "version": { "number": $newVersion },
-    "body": {
-        "storage": {
-            "value": "$escapedBody",
-            "representation": "storage"
-        }
-    }
-}
-"@
+                # Proper JSON construction using object serialization
+                $payloadObj = @{
+                    id      = $pageId
+                    type    = "page"
+                    title   = $currentPage.title
+                    version = @{ number = $newVersion }
+                    body    = @{
+                        storage = @{
+                            value = $body
+                            representation = "storage"
+                        }
+                    }
+                }
+                $payload = $payloadObj | ConvertTo-Json -Depth 10 -Compress
 
         if ($DryRun) {
             Write-Host "  - [DRY RUN] Would update page '$($currentPage.title)' (ID: $pageId) to version $newVersion."

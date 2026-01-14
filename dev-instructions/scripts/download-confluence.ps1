@@ -1,14 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$BaseUrl,
-    [string]$Email,
-    [string]$ApiToken,
-    [string]$PageId,
-    [string]$RootPageUrl,
-    [string]$OutDir = "ai-agile/confluence",
-    [ValidateSet('html', 'xhtml')] [string]$Format = 'xhtml',
-    [int]$MaxDepth = 5,
-    [switch]$SinglePageOnly
+    [string]$OutDir = "."
 )
 
 # Reference Implementation:
@@ -27,33 +19,59 @@ if (Test-Path $envPath) {
         if ($line -match '^(?<k>[A-Za-z_][A-Za-z0-9_]*)=(?<v>.*)$') {
             $key = $Matches['k']
             $val = $Matches['v']
-            [Environment]::SetEnvironmentVariable($key, $val, 'Process')
+            Set-Item -Path "Env:$key" -Value $val
         }
     }
+} else {
+    Write-Warning ".env file not found in $((Get-Location).Path). Credentials may be missing."
 }
+
+
+# After loading .env and confluence.config, check required variables
+# (MOVED BELOW VARIABLE ASSIGNMENTS)
 
 # Try to load config from OutDir/confluence.config (Simple Key=Value format)
 $configPath = Join-Path -Path $OutDir -ChildPath 'confluence.config'
+## Initialize variables
+$BaseUrl = $null
+$PageId = $null
+$Email = $null
+$ApiToken = $null
+Write-Host "DEBUG: Looking for confluence.config at $configPath"
 if (Test-Path $configPath) {
+    $rawConfig = Get-Content -LiteralPath $configPath -Raw
+    Write-Host "DEBUG: confluence.config contents:\n$rawConfig"
     try {
         # ConvertFrom-StringData parses "Key=Value" lines into a hashtable
-        $config = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-StringData
-        if ($config.ContainsKey('BaseUrl') -and -not $BaseUrl) { $BaseUrl = $config['BaseUrl'] }
-        if ($config.ContainsKey('PageId') -and -not $PageId) { $PageId = $config['PageId'] }
+        $config = $rawConfig | ConvertFrom-StringData
+        if ($config.ContainsKey('BaseUrl')) { $BaseUrl = $config['BaseUrl'] }
+        if ($config.ContainsKey('PageId')) { $PageId = $config['PageId'] }
+        # Email and ApiToken are NOT in confluence.config, always fallback to env
     }
     catch {
         Write-Warning "Failed to load config from $configPath : $_"
     }
+} else {
+    Write-Warning "confluence.config not found at $configPath"
 }
 
-# Fallback to env vars if parameters not supplied
-if (-not $BaseUrl) { $BaseUrl = $env:BASE_URL }
-if (-not $Email) { $Email = $env:CONF_EMAIL }
-if (-not $ApiToken) { $ApiToken = $env:CONF_TOKEN }
 
-# Validate credentials strictly (no hard-coded defaults)
-if (-not $BaseUrl -or -not $Email -or -not $ApiToken) {
-    throw "Missing credentials: set BASE_URL, CONF_EMAIL, and CONF_TOKEN via parameters or .env/ENV."
+# Always set Email and ApiToken from env after .env is loaded
+$Email = $env:CONF_EMAIL
+$ApiToken = $env:CONF_TOKEN
+
+# Debug output for loaded values
+Write-Host "DEBUG: BaseUrl = '$BaseUrl'"
+Write-Host "DEBUG: PageId = '$PageId'"
+Write-Host "DEBUG: Email = '$Email'"
+Write-Host "DEBUG: ApiToken = '$ApiToken'"
+# After all loading, check required variables and throw if missing
+if (-not $BaseUrl) { Write-Warning "BaseUrl not set from confluence.config." }
+if (-not $PageId) { Write-Warning "PageId not set from confluence.config." }
+if (-not $Email) { Write-Warning "CONF_EMAIL not set from .env." }
+if (-not $ApiToken) { Write-Warning "CONF_TOKEN not set from .env." }
+if (-not $BaseUrl -or -not $PageId -or -not $Email -or -not $ApiToken) {
+    throw "Missing credentials: set BaseUrl and PageId via confluence.config, CONF_EMAIL and CONF_TOKEN via .env."
 }
 
 function New-AuthHeader {
@@ -344,22 +362,9 @@ if (-not (Test-ConfluenceAuth -Headers $headers)) {
 if ($PageId) {
     $rootId = $PageId
 }
-elseif ($RootPageUrl) {
-    $rootId = Get-PageIdFromUrl -Url $RootPageUrl
-}
 else {
-    throw "You must provide -PageId or -RootPageUrl."
+    throw "You must provide PageId in confluence.config."
 }
 
-if (-not $SinglePageOnly) {
-    Write-Verbose "Starting tree download from page id=$rootId (max depth $MaxDepth)"
-    Invoke-TreeWalk -RootId $rootId -Headers $headers -OutDir $OutDir -Format $Format -MaxDepth $MaxDepth
-}
-else {
-    Write-Verbose "Downloading single page id=$rootId"
-    $page = Get-Page -Id $rootId -Headers $headers
-    $saved = Save-Page -Page $page -Dir $OutDir -Format $Format
-    if ($saved) {
-        Write-Verbose "Saved page id=$($saved.Id) v$($saved.Version) format=$($saved.Format) macros=[structured:$($saved.Macros.structured_macro),image:$($saved.Macros.image),link:$($saved.Macros.link)] -> $($saved.Path)"
-    }
-}
+Write-Verbose "Starting tree download from page id=$rootId (max depth 5)"
+Invoke-TreeWalk -RootId $rootId -Headers $headers -OutDir $OutDir -Format 'xhtml' -MaxDepth 5

@@ -6,29 +6,29 @@ This serves as the **minimum viable foundation** for any development team to imm
 
 ## 🎯 Purpose
 
-The goal of this project is to ensure that all AI-generated code:
+The goal of this project is to ensure that all AI-generated code and documentation:
 
-1. Adheres to a consistent **"Senior Principal Engineer & Security Architect"** persona.
-2. Follows strict **Security > Reliability > Maintainability > Performance** priorities.
-3. Implements specific language idioms and tooling configurations defined by the team.
+1.  **Multi-Persona Support**: Adheres to specialized roles (**Developer**, **Product Manager**, **Quality Engineer**) rather than a generic assistant.
+2.  **Strict Standards**: Follows **Security > Reliability > Maintainability > Performance** priorities.
+3.  **Context Aware**: Implements specific language idioms and integrates with tooling like Confluence.
 
 ## 📂 Repository Structure
 
 The core documentation is located in `dev-instructions/`.
 
 ```text
-coding-standards/
+.
 ├── README.md                   # This file
-└── dev-instructions/           # The knowledge base for AI
-    ├── master_standards.md     # 🚀 ENTRY POINT: Persona & Workflow
-    ├── ai-context.json         # Machine-readable context map
-    ├── llms.txt                # Text-based index for LLM prompting
-    ├── architecture_standards.md
-    ├── security_standards.md
-    ├── ... (other global standards)
-    └── languages/              # Language-specific implementations ("How")
-        ├── python/
-        └── typescript/
+└── dev-instructions/
+    ├── ai-instructions/        # The knowledge base for AI
+    │   ├── personas/           # 🎭 Role definitions (Dev, PM, QA)
+    │   ├── persona_standards.md # 🚀 ENTRY POINT: Routing & Context
+    │   ├── master_standards.md # Core Engineering Standards
+    │   ├── ai-context.json     # Machine-readable context map
+    │   └── languages/          # Language-specific implementations ("How")
+    └── scripts/                # 🤖 Automation Tools
+        ├── download-confluence.ps1 # Sync requirements from Confluence
+        └── upload-confluence.ps1   # Publish docs/specs to Confluence
 ```
 
 ## 🚀 How to Use
@@ -37,16 +37,28 @@ coding-standards/
 
 To implement these standards in your application:
 
-1. Copy the entire `dev-instructions/` folder into the **root level** of your project repository.
-2. Ensure that `dev-instructions/master_standards.md` is accessible.
-3. Commit these files to your version control system. This ensures the "brain" travels with the codebase.
+1.  Copy the entire `dev-instructions/` folder into the **root level** of your project repository.
+2.  Ensure that `dev-instructions/ai-instructions/persona_standards.md` is accessible.
+3.  Commit these files to your version control system.
 
 ### For AI Agents (Context Loading)
 
 When starting a new session with an AI coding assistant, provide the following context:
 
-1. **Primary Instruction**: "Adopt the persona and standards defined in `dev-instructions/master_standards.md`."
-2. **Reference**: Point the AI to `dev-instructions/llms.txt` or `dev-instructions/ai-context.json` to understand the available documentation map.
+1.  **Primary Instruction**: "Read `dev-instructions/ai-instructions/persona_standards.md` to map your persona."
+2.  **Activation**:
+    *   "Act as **Developer**" (Default: Implementation & Architecture)
+    *   "Act as **Product Manager**" (Requirements & User Stories)
+    *   "Act as **QA**" (Testing & Verification)
+
+### Confluence Integration
+
+This project includes scripts to sync documentation with Atlassian Confluence:
+
+*   **Download**: `scripts/download-confluence.ps1` - Fetches pages as XHTML/HTML to `agile-ai/source-material/confluence`.
+*   **Upload**: `scripts/upload-confluence.ps1` - Pushes updates back to Confluence.
+
+The **Product Manager** persona is trained to use these scripts for requirements gathering.
 
 ### The "What" vs. "How" Philosophy
 

@@ -1,6 +1,9 @@
 # Code Review Template
 Use this template when conducting a code review for [LANGUAGE] code.
 
+## Persona
+Adopt the persona defined in `../personas/developer.md` (Senior Principal Engineer) OR `../personas/quality_engineer.md` (Lead SDET) as appropriate.
+
 ## Context
 - **Project**: [PROJECT_NAME]
 - **Language**: [LANGUAGE]
@@ -11,10 +14,10 @@ Use this template when conducting a code review for [LANGUAGE] code.
 ## Review Checklist
 
 ### 1. Architecture & Design
-- [ ] Follows the Five-View Architecture framework
+- [ ] Follows the Five-View Architecture framework (see `../architecture_standards.md`)
 - [ ] Adheres to [LANGUAGE] coding standards
 - [ ] Proper separation of concerns
-- [ ] No violations of forbidden patterns
+- [ ] No violations of forbidden patterns (see `../forbidden_standards.md`)
 
 ### 2. Security
 - [ ] Input validation implemented

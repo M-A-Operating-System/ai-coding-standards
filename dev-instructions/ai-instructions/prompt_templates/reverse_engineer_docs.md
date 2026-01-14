@@ -1,15 +1,16 @@
 # Fully Automated Codebase Documentation & Reverse Engineering
 
 ## Persona
-Adopt the persona of a **Senior Principal Engineer & Security Architect**. Your primary goal is to produce clear, accurate, and maintainable documentation by reverse-engineering an existing codebase in a fully automated fashion.
+Adopt the persona defined in `../personas/developer.md`.
+Your primary goal is to produce clear, accurate, and maintainable documentation by reverse-engineering an existing codebase in a fully automated fashion.
 
 ## Objective
 To automatically and iteratively analyze an existing codebase and generate a comprehensive set of documentation as markdown files within a `docs-ai/` directory. This process is managed through a dynamic todo list and must run without user intervention until all source files are documented.
 
 ## Guiding Principles
 1.  **Adherence to Standards**: All generated documentation must strictly follow the guidelines outlined in:
-    *   `dev-instructions/documentation_standards.md` (The "What")
-    *   The relevant language-specific standards, such as `dev-instructions/languages/python/documentation_standards.md` (The "How").
+    *   `../documentation_standards.md` (The "What")
+    *   The relevant language-specific standards, such as `../languages/python/documentation_standards.md` (The "How").
 2.  **Clarity and Purpose**: Focus on explaining the "why" behind the code, not just the "what."
 3.  **Structure and Automation**: The process is a continuous loop designed to run to completion, driven by a clear todo list.
 
@@ -26,7 +27,7 @@ Your first step is to understand the project at a macro level.
 2.  **Codebase Scan**: Perform a full scan of the codebase to identify the overall structure, primary language(s), frameworks, and key dependencies.
 3.  **Generate High-Level README**: Create `docs-ai/README.md`. This file is the entry point to the documentation and must contain:
     *   **Project Overview**: A summary of the project's purpose and functionality.
-    *   **Inferred Architecture**: A description of the architecture. Refer to `dev-instructions/architecture_standards.md`.
+    *   **Inferred Architecture**: A description of the architecture. Refer to `../architecture_standards.md`.
     *   **Directory Structure Overview**: A summary of the key directories and their roles.
     *   **Setup & Execution**: Instructions on how to set up, run, and test the project.
     *   **Documentation Index Link**: A link to the `index.md` file for a full table of contents, like: `For a full index of all documentation, see the [Documentation Index](index.md).`
@@ -66,7 +67,7 @@ This is the core of the automated process. You will continuously loop through th
     *   Read the contents of the source file for the current todo item.
     *   Create the necessary directory structure inside `docs-ai/details/` that mirrors the source path (e.g., for `src/hooks/useAuth.tsx`, ensure `docs-ai/details/hooks/` exists).
     *   Create a new markdown file for the component (e.g., `docs-ai/details/hooks/useAuth.md`).
-    *   In this new file, add a detailed explanation of the component's rationale, state, methods, and a clear code example, adhering to `dev-instructions/languages/<lang>/example_standards.md`.
+    *   In this new file, add a detailed explanation of the component's rationale, state, methods, and a clear code example, adhering to `../languages/<lang>/example_standards.md`.
 5.  **Complete Task**: Update the status of the current task to `completed` using `manage_todo_list`.
 6.  **Loop**: Return to the beginning of this step (Step 4, substep 1) to get the next task.
 
