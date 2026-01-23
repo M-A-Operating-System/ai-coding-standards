@@ -4,6 +4,8 @@ Applies to: All Codebases
 ## 1. Code Documentation
 - **Why, not What**: Comments should explain rationale, not syntax.
 - **Public API**: All public interfaces must be documented.
+- **Function Documentation**: Every function/method must include an inline docstring describing its purpose, all input parameters (with types and expected values), and return values.
+- **Input Variables**: All input variables and arguments must be clearly documented for type, expected values, and rationale.
 
 ## 2. Architecture Decision Records (ADRs)
 - **Mandatory**: Significant decisions must be recorded in `docs/adr/`.

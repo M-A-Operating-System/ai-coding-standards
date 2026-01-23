@@ -1,3 +1,11 @@
+# Function & Class Documentation
+Every Python function and class must have a docstring that documents its purpose, all input parameters (with types and descriptions), and return values.
+
+# Input Parameter Documentation
+All input variables and arguments must be clearly documented for type, expected values, and rationale.
+
+# Inline Comments
+Inline comments should be used to clarify non-obvious logic or rationale.
 # Python Documentation Standards
 Implementation of: /documentation_standards.md
 
