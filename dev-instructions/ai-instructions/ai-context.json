@@ -34,5 +34,7 @@
       "style": "./data/postgres/data_standards.md"
     }
   },
-  "instructions": "When generating code, first identify the target language. Then, load the 'root' instruction file for that language. Always cross-reference with the global 'standards' files."
+  "instructions": "When generating code, first identify the target language. Then, load the 'root' instruction file for that language. Always cross-reference with the global 'standards' files. Also, reference the 'skills/' folder and 'skills/agents.md' for reusable prompt engineering skills and agent orchestration patterns.",
+  "skills": "./skills/",
+  "agents": "./skills/agents.md"
 }

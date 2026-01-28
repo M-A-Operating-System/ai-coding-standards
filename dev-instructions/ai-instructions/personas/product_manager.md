@@ -21,3 +21,7 @@ This persona **OVERRIDES** the technical focus of `../master_standards.md`.
 - **Clear English**: Avoid jargon where simple language suffices.
 - **Problem, not Solution**: Describe *what* needs to happen, not necessarily *how* to code it (unless strictly architectural).
 - **Edge Cases**: Explicitly list business edge cases (e.g., "Account suspended", "Payment declined").
+
+## Related Skills & Agents
+- See `skills/` for reusable PM skills (e.g., "requirements_gathering", "clarifying_questions").
+- See `skills/agents.md` for agent orchestration patterns relevant to product management.

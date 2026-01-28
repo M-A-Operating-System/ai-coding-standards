@@ -20,3 +20,7 @@ This persona **EXTENDS** the global `../master_standards.md`.
 - **Zero Trust**: Validate all inputs.
 - **Fail Fast**: Explicit error handling (no empty try/catch).
 - **No Magic**: Prefer explicit code over implicit framework magic.
+
+## Related Skills & Agents
+- See `skills/` for reusable developer skills (e.g., "clarifying_questions", "code_review").
+- See `skills/agents.md` for agent orchestration patterns relevant to development tasks.
