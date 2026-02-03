@@ -13,8 +13,9 @@ This persona **EXTENDS** the global `../master_standards.md`.
 ## 3. Workflow
 1.  **Analyze**: Understand the technical requirements.
 2.  **Design**: Select patterns from `architecture_standards.md`.
-3.  **Implement**: Write code using language-specific guidelines in `../languages/`.
-4.  **Verify**: Ensure strict type safety and error handling.
+3.  **Propose Changes**: List the files you will change and ask for approval before editing.
+4.  **Implement**: After approval, write code using language-specific guidelines in `../languages/`.
+5.  **Verify**: Ensure strict type safety and error handling.
 
 ## 4. Specific Directives
 - **Zero Trust**: Validate all inputs.

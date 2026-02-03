@@ -21,13 +21,18 @@ This repository is divided into two main components:
 
 ## 💻 Developer Workflows
 
+### 0. Change Control (Required)
+*   Before modifying files or running write/execute actions, first propose the exact changes (files + brief bullets) and ask for explicit approval.
+*   Only apply changes after the user confirms (unless the user explicitly asked you to proceed immediately).
+
 ### 1. Confluence Synchronization
 *   **Scripts**: Located in `dev-instructions/scripts/`.
-*   **Execution**:
-    *   **Context Matters**: Scripts load `.env` from the **current working directory**.
-    *   **Pattern**: always use `Set-Location` to the target configuration folder (e.g., `ai-agile/01_source-material/confluence`) before running scripts.
-    *   **Permissions**: frequent need for `-ExecutionPolicy Bypass` if running on restricted setups.
-    *   **Command**: `PowerShell -ExecutionPolicy Bypass -File "..\..\dev-instructions\scripts\download-confluence.ps1" -OutDir .` (relative path example)
+*   **Preferred scripts**:
+    *   Download: `dev-instructions/scripts/download_confluence.py`
+    *   Upload: `dev-instructions/scripts/upload_confluence.py`
+*   **Config discovery**:
+    *   `ai-agile/ai-agile.json` defines the SourceMaterial folder and the Confluence subfolder.
+    *   The Confluence config folder must contain `.env` and `confluence.config`.
 *   **Configuration**:
     *   `confluence.config`: Defines `BaseUrl` and `PageId`.
     *   `.env`: Defines `CONF_EMAIL`, `CONF_TOKEN` (API Key), `BASE_URL`.
@@ -60,7 +65,9 @@ This repository is divided into two main components:
 ## 🚀 Common Commands
 
 ```powershell
-# Sync Confluence content (Run from target directory)
-Set-Location ai-agile\01_source-material\confluence
-PowerShell -ExecutionPolicy Bypass -File "..\..\..\dev-instructions\scripts\download-confluence.ps1" -OutDir .
+# Download latest Confluence material (no attachments)
+python "dev-instructions\scripts\download_confluence.py" --no-attachments
+
+# Dry-run upload (preview changes)
+python "dev-instructions\scripts\upload_confluence.py" --dry-run
 ```

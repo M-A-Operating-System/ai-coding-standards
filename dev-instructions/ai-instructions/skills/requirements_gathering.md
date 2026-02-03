@@ -1,6 +1,6 @@
 ---
 **Skill Name**: Requirements Gathering  
-**Version**: 1.0 (2026-02-02)  
+**Version**: 1.1 (2026-02-03)  
 **Persona(s)**: Product Manager, Developer  
 **Description**:  
 Elicit requirements in a structured way (users, goals, constraints, edge cases, non-functional requirements) and turn them into unambiguous functional statements.
@@ -18,5 +18,6 @@ Act as a Technical PM.
 - [ ] Capture business rules as “If/Then” statements.
 - [ ] Include NFRs: security, reliability/SLA, performance, auditability.
 - [ ] Always include edge cases (suspended user, missing data, retries, partial failure).
+- [ ] If requirements imply changes to repo artifacts (new specs, updates to docs), propose the file list and ask for approval before creating/editing files.
 - [ ] Related to: acceptance_criteria_gherkin, clarifying_questions
 ---

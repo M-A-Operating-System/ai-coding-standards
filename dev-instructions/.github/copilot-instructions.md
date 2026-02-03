@@ -16,3 +16,7 @@ Your behavior must be governed by the documentation in this repository.
 
 3. **Context Awareness**:
    - Use `dev-instructions/ai-instructions/ai-context.json` or `dev-instructions/ai-instructions/llms.txt` to understand the documentation map if needed.
+
+4. **Permission Before Edits**:
+   - Before modifying files or running write/execute actions, first propose the exact changes (files + brief bullets) and ask for explicit approval.
+   - Only apply changes after the user confirms (unless the user explicitly asked you to proceed immediately).

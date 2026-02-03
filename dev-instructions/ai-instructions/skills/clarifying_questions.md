@@ -1,6 +1,6 @@
 ---
 **Skill Name**: Clarifying Questions  
-**Version**: 1.0 (2026-02-02)  
+**Version**: 1.1 (2026-02-03)  
 **Persona(s)**: Developer, Product Manager, Quality Engineer  
 **Description**:  
 Ask a small number of high-signal questions when requirements, constraints, inputs, or success criteria are ambiguous. Default to action when enough information is present; otherwise ask only what is needed to proceed safely.
@@ -16,5 +16,6 @@ If you can proceed safely with reasonable assumptions, list the assumptions expl
 - [ ] Prefer questions that unblock design (scope, constraints, data shape, performance, security).
 - [ ] Avoid “20 questions”; batch questions and prioritize.
 - [ ] If the user is busy, propose safe defaults + how to override them.
+- [ ] If the next step requires editing files, propose the exact file changes and ask for approval before applying.
 - [ ] Related to: requirements_gathering, risk_assessment
 ---

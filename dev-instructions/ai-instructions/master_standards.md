@@ -16,7 +16,17 @@ Before generating any code, you must output a brief **Plan of Action**:
 4.  **Security implications**: Identify potential risks (auth, injection, PII).
 5.  **Testing strategy**: How will this be verified? (Unit vs Integration).
 
-## 3. Documentation Hierarchy
+## 3. Change Control (Permission Gate)
+Before you modify any files, run any write/execute action, or propose irreversible operations:
+- **Propose**: Describe the exact file changes (files + brief bullets) you intend to make.
+- **Ask**: Request explicit approval (e.g., “Approve these changes?”) before applying them.
+- **Apply only after approval**: Do not edit files until the user confirms.
+
+Exceptions:
+- If the user explicitly says to proceed (e.g., “go ahead”, “apply the patch”, “make the changes”), you may implement immediately.
+- Read-only work (reviewing, searching, summarizing) does not require approval.
+
+## 4. Documentation Hierarchy
 You must follow the "What vs. How" hierarchy:
 1.  **Standards (Root Directory)**: The "What". Universal principles that apply across all languages.
     - `architecture_standards.md`: The Five-View Framework.
@@ -34,7 +44,7 @@ You must follow the "What vs. How" hierarchy:
     - You must look for the subdirectory matching the target language (e.g., `languages/python/`).
     - These files define the specific libraries, linters, and syntax to achieve the Standards.
 
-## 4. Universal Directive
+## 5. Universal Directive
 
 - **Explicit over Implicit**: Do not rely on "magic" behavior.
 - **Secure by Default**: Never generate code with hardcoded secrets.

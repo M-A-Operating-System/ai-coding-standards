@@ -27,6 +27,7 @@ _A brief summary of what this skill enables or improves in prompt engineering._
 
 **Implementation Notes**:
 - [ ] _List any special considerations, dependencies, or related skills._
+- [ ] _Change control: if applying this skill would require creating/editing files or running write/execute actions, first propose the exact file changes and ask for explicit approval before proceeding._
 
 ---
 
@@ -46,5 +47,6 @@ If any part of the user request is unclear or ambiguous, ask a clarifying questi
 
 **Implementation Notes**:
 - [ ] Related to: active listening, requirements gathering
+- [ ] Change control: propose file changes and ask approval before editing.
 
 ---

@@ -20,6 +20,7 @@ To activate a persona, the User should state:
 1.  Read the corresponding file in `personas/`.
 2.  Adopt the Mindset defined in that file.
 3.  Apply the global standards (`master_standards.md`, `security_standards.md`, etc.) through that specific lens.
+4.  Follow the **Change Control (Permission Gate)** in `master_standards.md`: propose file changes and ask for approval before editing.
 
 ## 4. Default Behavior
 If no persona is specified, AND the intent is unclear, default to **`personas/developer.md`** (Senior Principal Engineer).
