@@ -10,6 +10,7 @@ The `skills` folder is the central repository for reusable, persona-driven GenAI
 3. **Update Skills**: If a skill evolves, update its file and increment the version or date if applicable. Ensure all references are updated if the skill's name or scope changes.
 4. **Naming Convention**: Use clear, descriptive filenames (e.g., `clarifying_questions.md`, `chain_of_thought.md`).
 5. **Documentation**: Each skill file must follow the template below for clarity and standardization.
+6. **Avoid unnecessary tooling**: Skills should primarily define reusable prompting workflows and artifact formats. Creating new scripts/tools is the exception and must be justified; for **PM-oriented** skills, default to producing the artifact directly (and reusing existing scripts) rather than proposing new tooling.
 
 ## Skill Definition Template
 

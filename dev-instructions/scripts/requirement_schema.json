@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/canonical-requirements.schema.json",
+  "title": "Canonical Requirements (Story + BDD + Traceability)",
+  "type": "object",
+  "required": ["schemaVersion", "sourceDocument", "requirements"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "minLength": 1 },
+    "sourceDocument": {
+      "type": "object",
+      "required": ["sourceRoot", "relativePath", "sourceType"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceRoot": { "type": "string", "const": "SourceMaterial" },
+        "relativePath": { "type": "string", "minLength": 1 },
+        "sourceType": {
+          "type": "string",
+          "enum": ["confluence-xhtml", "markdown", "pdf", "other"]
+        },
+        "title": { "type": "string" },
+        "retrievedAt": { "type": "string" },
+        "confluence": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pageId": { "type": "string" },
+            "space": { "type": "string" },
+            "version": { "type": ["integer", "string"] },
+            "url": { "type": "string" }
+          }
+        }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/Requirement" }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "Requirement": {
+      "type": "object",
+      "required": ["id", "kind", "classification", "brdSectionId", "references"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^REQ[0-9]{7}$"
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["Requirement", "Fact", "Definition", "Assumption", "Constraint"]
+        },
+        "classification": {
+          "type": "object",
+          "required": ["primary"],
+          "additionalProperties": false,
+          "properties": {
+            "primary": {
+              "type": "string",
+              "enum": ["Business", "Functional", "Architecture", "NonFunctional"]
+            },
+            "tags": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "brdSectionId": {
+          "type": "string",
+          "enum": [
+            "BRD-01",
+            "BRD-02",
+            "BRD-03",
+            "BRD-04",
+            "BRD-05",
+            "BRD-06",
+            "BRD-07",
+            "BRD-08",
+            "BRD-09",
+            "BRD-99"
+          ]
+        },
+        "title": { "type": "string" },
+        "statement": { "type": "string" },
+        "story": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["asA", "iWant"],
+          "properties": {
+            "asA": { "type": "string", "minLength": 1 },
+            "iWant": { "type": "string", "minLength": 1 },
+            "soThat": { "type": "string" }
+          }
+        },
+        "bdd": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["feature", "scenario", "steps"],
+          "properties": {
+            "feature": { "type": "string", "minLength": 1 },
+            "scenario": { "type": "string", "minLength": 1 },
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["keyword", "text"],
+                "properties": {
+                  "keyword": { "type": "string", "enum": ["Given", "When", "Then", "And"] },
+                  "text": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        },
+        "rationale": { "type": "string" },
+        "acceptanceCriteria": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "references": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/Reference" }
+        }
+      },
+      "allOf": [
+        {
+          "anyOf": [
+            { "required": ["statement"] },
+            { "required": ["story"] },
+            { "required": ["bdd"] }
+          ]
+        }
+      ]
+    },
+    "Reference": {
+      "type": "object",
+      "required": ["sourceRoot", "relativePath", "locator"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceRoot": { "type": "string", "const": "SourceMaterial" },
+        "relativePath": { "type": "string", "minLength": 1 },
+        "locator": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "confluenceLocalId": { "type": "string" },
+            "headingPath": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            },
+            "table": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "caption": { "type": "string" },
+                "row": { "type": "integer", "minimum": 1 },
+                "column": { "type": "integer", "minimum": 1 },
+                "header": { "type": "string" }
+              }
+            },
+            "xpath": { "type": "string" },
+            "textFingerprint": { "type": "string" }
+          },
+          "anyOf": [
+            { "required": ["confluenceLocalId"] },
+            { "required": ["headingPath"] },
+            { "required": ["table"] },
+            { "required": ["xpath"] },
+            { "required": ["textFingerprint"] }
+          ]
+        },
+        "quote": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

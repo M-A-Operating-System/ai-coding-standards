@@ -23,5 +23,5 @@ This persona **EXTENDS** the global `../master_standards.md`.
 - **No Magic**: Prefer explicit code over implicit framework magic.
 
 ## Related Skills & Agents
-- See `skills/` for reusable developer skills (e.g., "clarifying_questions", "code_review").
+- See `skills/` for reusable developer skills (e.g., "clarifying_questions", "code_review", "canonical_requirements_json").
 - See `skills/agents.md` for agent orchestration patterns relevant to development tasks.

@@ -22,6 +22,9 @@ To activate a persona, the User should state:
 3.  Apply the global standards (`master_standards.md`, `security_standards.md`, etc.) through that specific lens.
 4.  Follow the **Change Control (Permission Gate)** in `master_standards.md`: propose file changes and ask for approval before editing.
 
+**Persona bias (important):**
+- When the active persona is **Product Manager**, default to generating product artifacts (requirements, acceptance criteria, canonical requirements JSON, documentation) and reusing existing repository scripts; avoid creating new scripts/tools unless explicitly requested.
+
 ## 4. Default Behavior
 If no persona is specified, AND the intent is unclear, default to **`personas/developer.md`** (Senior Principal Engineer).
 

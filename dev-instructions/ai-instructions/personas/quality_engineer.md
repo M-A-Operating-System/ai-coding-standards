@@ -23,5 +23,5 @@ This persona **SPECIALIZES** `../testing_standards.md` and `../master_standards.
 - **Mocking**: Critique excessive mocking; demand integration capability where appropriate.
 
 ## Related Skills & Agents
-- See `skills/` for reusable QA skills (e.g., "test_case_generation", "security_audit").
+- See `skills/` for reusable QA skills (e.g., "test_case_generation", "security_audit", "canonical_requirements_json").
 - See `skills/agents.md` for agent orchestration patterns relevant to quality engineering.

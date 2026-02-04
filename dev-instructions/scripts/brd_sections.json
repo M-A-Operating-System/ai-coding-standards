@@ -1,0 +1,232 @@
+{
+  "schemaVersion": "1.0",
+  "documentType": "BRD",
+  "titleTemplate": "Business Requirements Document — Canonical Requirements",
+  "assignmentPolicy": {
+    "allowMultipleSections": false,
+    "firstMatchWins": true,
+    "unassignedSectionId": "BRD-99"
+  },
+  "rendering": {
+    "orderBy": [
+      "sourceDocument.relativePath",
+      "requirement.id"
+    ],
+    "withinSectionGroupBy": [
+      "sourceDocumentTitle"
+    ]
+  },
+  "sections": [
+    {
+      "id": "BRD-01",
+      "number": "1",
+      "title": "Executive Summary",
+      "purpose": "High-level purpose and outcomes; include only explicit scope/purpose facts from source.",
+      "match": [
+        {
+          "any": [
+            {
+              "field": "requirement.classification.tags",
+              "op": "contains",
+              "value": "DocumentPurpose"
+            },
+            {
+              "field": "requirement.classification.tags",
+              "op": "contains",
+              "value": "DocumentOverview"
+            },
+            {
+              "field": "requirement.statement",
+              "op": "containsText",
+              "value": "provides an outline"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BRD-02",
+      "number": "2",
+      "title": "Scope and Context",
+      "purpose": "Business context, drivers, and boundaries explicitly stated in sources.",
+      "match": [
+        {
+          "any": [
+            {
+              "field": "requirement.classification.tags",
+              "op": "contains",
+              "value": "Scope"
+            },
+            {
+              "field": "requirement.classification.tags",
+              "op": "contains",
+              "value": "Context"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BRD-03",
+      "number": "3",
+      "title": "Assumptions and Constraints",
+      "purpose": "All explicit assumptions and hard constraints.",
+      "match": [
+        {
+          "any": [
+            {
+              "field": "requirement.kind",
+              "op": "eq",
+              "value": "Assumption"
+            },
+            {
+              "field": "requirement.kind",
+              "op": "eq",
+              "value": "Constraint"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BRD-04",
+      "number": "4",
+      "title": "Definitions and Glossary",
+      "purpose": "All explicit definitions and term meanings.",
+      "match": [
+        {
+          "field": "requirement.kind",
+          "op": "eq",
+          "value": "Definition"
+        }
+      ]
+    },
+    {
+      "id": "BRD-05",
+      "number": "5",
+      "title": "Business Requirements",
+      "purpose": "Business-level requirements and rules.",
+      "match": [
+        {
+          "all": [
+            {
+              "field": "requirement.classification.primary",
+              "op": "eq",
+              "value": "Business"
+            },
+            {
+              "field": "requirement.kind",
+              "op": "in",
+              "value": [
+                "Requirement",
+                "Fact"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BRD-06",
+      "number": "6",
+      "title": "Functional Requirements",
+      "purpose": "System behaviors and functional capabilities.",
+      "match": [
+        {
+          "field": "requirement.classification.primary",
+          "op": "eq",
+          "value": "Functional"
+        }
+      ]
+    },
+    {
+      "id": "BRD-07",
+      "number": "7",
+      "title": "Non-Functional Requirements",
+      "purpose": "Quality attributes (audit, security, performance, compliance, etc.).",
+      "match": [
+        {
+          "field": "requirement.classification.primary",
+          "op": "eq",
+          "value": "NonFunctional"
+        }
+      ]
+    },
+    {
+      "id": "BRD-08",
+      "number": "8",
+      "title": "Architecture and Operating Model",
+      "purpose": "Reference architecture, layers, components, and operating model/policy/oversight statements.",
+      "match": [
+        {
+          "any": [
+            {
+              "field": "requirement.classification.primary",
+              "op": "eq",
+              "value": "Architecture"
+            },
+            {
+              "field": "requirement.classification.tags",
+              "op": "contains",
+              "value": "OperatingModel"
+            },
+            {
+              "field": "requirement.classification.tags",
+              "op": "contains",
+              "value": "Policy"
+            },
+            {
+              "field": "requirement.classification.tags",
+              "op": "contains",
+              "value": "Oversight"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BRD-09",
+      "number": "9",
+      "title": "Appendices (Diagrams, Navigation, Document Structure)",
+      "purpose": "Facts about diagrams/macros and document navigation that materially affect interpretation.",
+      "match": [
+        {
+          "any": [
+            {
+              "field": "requirement.classification.tags",
+              "op": "contains",
+              "value": "Diagram"
+            },
+            {
+              "field": "requirement.classification.tags",
+              "op": "contains",
+              "value": "Navigation"
+            },
+            {
+              "field": "requirement.classification.tags",
+              "op": "contains",
+              "value": "DocumentStructure"
+            }
+          ]
+        }
+      ],
+      "renderingHints": {
+        "includeQuotes": false,
+        "includeReferences": false
+      }
+    },
+    {
+      "id": "BRD-99",
+      "number": "99",
+      "title": "Unassigned (Review Needed)",
+      "purpose": "Catch-all to ensure no requirements are dropped; contains any requirements that did not match earlier sections.",
+      "match": [
+        {
+          "field": "requirement.id",
+          "op": "exists",
+          "value": true
+        }
+      ]
+    }
+  ]
+}
