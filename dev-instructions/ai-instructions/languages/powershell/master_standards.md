@@ -1,17 +1,9 @@
-## Quick Start for Agents
-
-When asked to write PowerShell code:
-
-1. Read `/master_instructions.md` for the plan.
-2. Read `languages/powershell/coding_standards.md` for style and module structure.
-3. Read `languages/powershell/examples.md` for templates.
-4. Check `languages/powershell/forbidden_standards.md` before finalizing.
 # POWERSHELL INSTRUCTIONS (The "How")
 Version: 1.0.0
-Parent: /master_instructions.md
+Parent: /master_standards.md
 
 ## Relationship to Standards
-This file provides the PowerShell-specific implementation ("How") for the global master instructions defined in `/master_instructions.md` ("What"). It serves as the entry point for all PowerShell-related code generation tasks.
+This file provides the PowerShell-specific implementation ("How") for the global master standards defined in `/master_standards.md` ("What"). It serves as the entry point for all PowerShell-related code generation tasks.
 
 ## Purpose
 Provide PowerShell-specific implementation details for the Global Standards.
@@ -36,7 +28,7 @@ Provide PowerShell-specific implementation details for the Global Standards.
 
 When asked to write PowerShell code:
 
-1. Read `/master_instructions.md` for the plan.
+1. Read `/master_standards.md` for the plan.
 2. Read `languages/powershell/coding_standards.md` for style and module structure.
 3. Read `languages/powershell/security_standards.md` for secure execution and credential handling.
 4. Check `languages/powershell/forbidden_standards.md` before finalizing.

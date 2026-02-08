@@ -20,26 +20,66 @@ The core documentation is located in `dev-instructions/`.
 .
 ├── README.md                   # This file
 └── dev-instructions/
-    ├── ai-instructions/        # The knowledge base for AI
-    │   ├── personas/           # 🎭 Role definitions (Dev, PM, QA)
-    │   ├── persona_standards.md # 🚀 ENTRY POINT: Routing & Context
-    │   ├── master_standards.md # Core Engineering Standards
-    │   ├── ai-context.json     # Machine-readable context map
-    │   └── languages/          # Language-specific implementations ("How")
-    └── scripts/                # 🤖 Automation Tools
-        ├── download-confluence.ps1 # Sync requirements from Confluence
-        └── upload-confluence.ps1   # Publish docs/specs to Confluence
+    ├── ai-instructions/         # The knowledge base for AI (standards, skills, personas)
+    │   ├── llms.txt             # Documentation map / quick routing (start here if lost)
+    │   ├── ai-context.json      # Machine-readable context map
+    │   ├── persona_standards.md # 🚀 ENTRY POINT: Persona selection + routing
+    │   ├── master_standards.md  # Global standards (security-first, plan-of-action, permission gate)
+    │   ├── common_scenarios.md  # Situation-based workflows (review/refactor/security/docs/etc.)
+    │   ├── security_standards.md
+    │   ├── testing_standards.md
+    │   ├── ops_standards.md
+    │   ├── documentation_standards.md
+    │   ├── tools_standards.md
+    │   ├── architecture_standards.md
+    │   ├── api_standards.md
+    │   ├── frontend_standards.md
+    │   ├── data_standards.md
+    │   ├── forbidden_standards.md
+    │   ├── personas/            # 🎭 Role definitions (Developer, PM, QA, Data, DevOps, Cloud, Delivery)
+    │   ├── skills/              # Reusable prompt-engineering skills (skill cards)
+    │   ├── languages/           # Language-specific “How” (e.g., python, ...)
+    │   └── data/                # Database-specific “How” (e.g., postgres, ...)
+    └── scripts/                 # Automation tools (e.g., Confluence sync)
+        ├── download_confluence.py
+        └── upload_confluence.py
 ```
+
+Notes:
+- `ai-instructions/languages/` contains language-specific implementation guidance (the “How”) that supports the global standards (the “What”).
+- `ai-instructions/data/` contains database-specific implementation guidance (the “How”) that supports `data_standards.md`.
 
 ## 🚀 How to Use
 
 ### Project Setup
 
-To implement these standards in your application:
+There are two supported ways to leverage this project. **Either way, `dev-instructions/ai-instructions/` should live in (and ship with) your codebase** so the knowledge and instructions follow your work product.
 
-1.  Copy the entire `dev-instructions/` folder into the **root level** of your project repository.
-2.  Ensure that `dev-instructions/ai-instructions/persona_standards.md` is accessible.
-3.  Commit these files to your version control system.
+#### Option 1 (Recommended first): Read-only Git submodule
+Use this repository as a **read-only** dependency inside your project, so you can adopt the standards quickly and decide later whether you want to maintain your own fork.
+
+From your project repo root:
+
+```bash
+# Add as a submodule (pick either HTTPS or SSH URL)
+git submodule add https://github.com/M-A-Operating-System/ai-coding-standards dev-instructions
+
+# Initialize/update submodules on new clones
+git submodule update --init --recursive
+```
+
+Guidance:
+- Treat the submodule as **read-only**: don’t customize it in place.
+- Update by bumping the submodule pointer (ideally to a tagged release/known commit).
+
+If you think you want to clone and maintain independently, start with the submodule approach for a sprint or two first—then make the fork/ownership decision with real usage data.
+
+#### Option 2: Clone and maintain independently
+Clone this repo into a folder (or copy `dev-instructions/` into your repo) and take ownership of evolving the content.
+
+Guidance:
+- Use this if you know you need to tailor standards heavily to your org/tooling.
+- Keep the docs under version control and review changes like production code.
 
 ### For AI Agents (Context Loading)
 
@@ -50,13 +90,17 @@ When starting a new session with an AI coding assistant, provide the following c
     *   "Act as **Developer**" (Default: Implementation & Architecture)
     *   "Act as **Product Manager**" (Requirements & User Stories)
     *   "Act as **QA**" (Testing & Verification)
+  *   "Act as **Data Scientist**" (Data analysis & model/product DS concerns)
+  *   "Act as **Project Manager**" (Delivery planning & coordination)
+  *   "Act as **DevOps Engineer**" (CI/CD, reliability, observability)
+  *   "Act as **Cloud Engineer**" (Cloud architecture, IaC, IAM/networking)
 
 ### Confluence Integration
 
 This project includes scripts to sync documentation with Atlassian Confluence:
 
-*   **Download**: `scripts/download-confluence.ps1` - Fetches pages as XHTML/HTML to `ai-agile/01_source-material/confluence`.
-*   **Upload**: `scripts/upload-confluence.ps1` - Pushes updates back to Confluence.
+*   **Download**: `dev-instructions/scripts/download_confluence.py` - Fetches pages as XHTML/HTML to `ai-agile/01_source-material/confluence`.
+*   **Upload**: `dev-instructions/scripts/upload_confluence.py` - Pushes updates back to Confluence.
 
 The **Product Manager** persona is trained to use these scripts for requirements gathering.
 
@@ -86,4 +130,4 @@ It is now a **primary responsibility of the Development Manager** to take owners
 ## 🛠 Contributing
 
 1. **Global Changes**: Edit files in `dev-instructions/` for rules that apply to all languages.
-2. **Language Changes**: Edit files in `dev-instructions/languages/<lang>/` for syntax or tool-specific updates.
+2. **Language Changes**: Edit files in `dev-instructions/ai-instructions/languages/<lang>/` for syntax or tool-specific updates.

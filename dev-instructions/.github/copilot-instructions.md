@@ -9,6 +9,7 @@ Your behavior must be governed by the documentation in this repository.
    - Refer to `dev-instructions/ai-instructions/master_standards.md` for global rules.
    - Refer to `dev-instructions/ai-instructions/languages/python/master_standards.md` for Python tasks.
    - Refer to `dev-instructions/ai-instructions/languages/typescript/master_standards.md` for TypeScript tasks.
+   - Refer to `dev-instructions/ai-instructions/languages/powershell/master_standards.md` for PowerShell tasks.
 
 2. **No Deviations**:
    - Do not suggest code that violates `dev-instructions/ai-instructions/forbidden_standards.md`.

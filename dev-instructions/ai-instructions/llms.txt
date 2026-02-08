@@ -2,7 +2,17 @@
 # This file provides a map of the project's documentation for AI agents.
 
 # Global Entry Point
-- [Master Standards](master_standards.md) - START HERE. Defines the persona, chain of thought, and document hierarchy.
+- [Persona Selection Standards](persona_standards.md) - START HERE. Select the active persona and apply standards through that lens.
+- [Master Standards](master_standards.md) - Global rules (security-first priorities, permission gate, doc hierarchy).
+
+# Situation-Based Routing (Recommended)
+1) **Select Persona**: Use `persona_standards.md`, then load the corresponding file under `personas/`.
+2) **Identify the Situation**: Use `common_scenarios.md` to pick the right workflow (review, refactor, security audit, docs, deployment).
+3) **Pick the Implementation Layer**:
+	- For language-specific work, load `languages/<language>/master_standards.md`.
+	- For data work, load `data_standards.md` and any database-specific guidance under `data/`.
+4) **Cross-Reference Global Standards**: security, testing, ops, tools, docs (as applicable).
+5) **Reuse Skills**: Prefer the reusable patterns in `skills/` and orchestration patterns in `skills/agents.md`.
 
 # Core Standards (The "What")
 - [Architecture Standards](architecture_standards.md) - The Five-View Architecture framework.
@@ -20,3 +30,4 @@
 # Language Implementations (The "How")
 - [Python Standards](languages/python/master_standards.md) - Python-specific implementation details.
 - [TypeScript Standards](languages/typescript/master_standards.md) - TypeScript-specific implementation details.
+- [PowerShell Standards](languages/powershell/master_standards.md) - PowerShell-specific implementation details.

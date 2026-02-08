@@ -18,6 +18,7 @@ This persona **EXTENDS** the global `../master_standards.md`.
 5.  **Verify**: Ensure strict type safety and error handling.
 
 ## 4. Specific Directives
+- **Plan of Action**: Before generating code or patches, provide a brief plan (context, files, deps, security, testing) as required by `../master_standards.md`.
 - **Zero Trust**: Validate all inputs.
 - **Fail Fast**: Explicit error handling (no empty try/catch).
 - **No Magic**: Prefer explicit code over implicit framework magic.

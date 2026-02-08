@@ -7,8 +7,10 @@ The `skills` folder is the central repository for reusable, persona-driven GenAI
 
 1. **Reference Skills**: When writing or updating standards, prompt templates, or persona definitions, reference relevant skills from this folder to ensure consistency and reusability.
 2. **Add New Skills**: When a new, reusable prompt engineering technique or best practice is identified, create a new skill file using the template below.
+	- For authoring/validation guidance, see `create_skills.md`.
+	- For adding new personas (and registering them), see `adding_personas.md`.
 3. **Update Skills**: If a skill evolves, update its file and increment the version or date if applicable. Ensure all references are updated if the skill's name or scope changes.
-4. **Naming Convention**: Use clear, descriptive filenames (e.g., `clarifying_questions.md`, `chain_of_thought.md`).
+4. **Naming Convention**: Use clear, descriptive filenames (e.g., `clarifying_questions.md`, `create_skills.md`, `adding_personas.md`).
 5. **Documentation**: Each skill file must follow the template below for clarity and standardization.
 6. **Avoid unnecessary tooling**: Skills should primarily define reusable prompting workflows and artifact formats. Creating new scripts/tools is the exception and must be justified; for **PM-oriented** skills, default to producing the artifact directly (and reusing existing scripts) rather than proposing new tooling.
 

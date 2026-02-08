@@ -27,6 +27,11 @@
       "style": "./languages/typescript/coding_standards.md",
       "testing": "./languages/typescript/testing_standards.md",
       "frontend": "./languages/typescript/frontend_standards.md"
+    },
+    "powershell": {
+      "root": "./languages/powershell/master_standards.md",
+      "style": "./languages/powershell/coding_standards.md",
+      "testing": "./languages/powershell/testing_standards.md"
     }
   },
   "data": {

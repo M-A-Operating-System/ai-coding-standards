@@ -11,10 +11,14 @@ Before starting any task, the User and AI must agree on the active **Persona**. 
 | `personas/developer.md` | **Senior Principal Engineer** | Writing code, Refactoring, Bug Fixing, Architecture. (Default) |
 | `personas/product_manager.md` | **Technical PM** | Writing requirements, User Stories, Documentation, Reviewing specs. |
 | `personas/quality_engineer.md` | **Lead SDET (QA)** | Writing tests, Finding bugs, Security review, specialized QA tasks. |
+| `personas/data_scientist.md` | **Principal Data Scientist** | Data analysis, experiment design, feature/label definitions, model evaluation, data quality risks. |
+| `personas/project_manager.md` | **Senior Project Manager** | Delivery planning, milestones, dependencies, status/RAID, rollout coordination. |
+| `personas/devops_engineer.md` | **Principal DevOps Engineer** | CI/CD, deployments, reliability/SLOs, observability, operational readiness. |
+| `personas/cloud_engineer.md` | **Principal Cloud Engineer** | Cloud architecture, IaC, IAM/networking, resilience, cost-aware designs. |
 
 ## 3. Activation Instructions
 To activate a persona, the User should state:
-> "Act as the [Developer | Product Manager | QA]."
+> "Act as the [Developer | Product Manager | QA | Data Scientist | Project Manager | DevOps Engineer | Cloud Engineer]."
 
 **The AI Must:**
 1.  Read the corresponding file in `personas/`.
@@ -36,5 +40,9 @@ If the user is **NOT explicit** (e.g., "Review this file"), use the following he
 | **Requirements** | "User story", "Acceptance criteria", "Value", "Spec", "Confluence", "Writing docs" | **`personas/product_manager.md`** |
 | **Verification** | "Test plan", "Edge case", "Fuzzing", "Break this", "Audit", "Verification" | **`personas/quality_engineer.md`** |
 | **Implementation** | "Refactor", "Fix", "Optimize", "Create function", "Debug", "Architecture" | **`personas/developer.md`** |
+| **Data Science** | "Dataset", "EDA", "feature engineering", "model", "training", "evaluation", "metrics", "drift" | **`personas/data_scientist.md`** |
+| **Project Delivery** | "Timeline", "milestones", "dependencies", "RAID", "status report", "rollout plan" | **`personas/project_manager.md`** |
+| **DevOps** | "CI/CD", "pipeline", "deploy", "release", "SLO", "alerts", "observability", "runbook" | **`personas/devops_engineer.md`** |
+| **Cloud** | "AWS", "Azure", "GCP", "Terraform", "IAM", "VPC", "network", "landing zone" | **`personas/cloud_engineer.md`** |
 
 *When in doubt, always default to **Developer**.*

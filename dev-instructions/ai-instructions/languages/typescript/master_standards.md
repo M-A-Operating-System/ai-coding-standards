@@ -1,9 +1,9 @@
 # TYPESCRIPT INSTRUCTIONS (The "How")
 Version: 1.0.0
-Parent: /master_instructions.md
+Parent: /master_standards.md
 
 ## Relationship to Standards
-This file provides the TypeScript-specific implementation ("How") for the global master instructions defined in `/master_instructions.md` ("What"). It serves as the entry point for all TypeScript-related code generation tasks.
+This file provides the TypeScript-specific implementation ("How") for the global master standards defined in `/master_standards.md` ("What"). It serves as the entry point for all TypeScript-related code generation tasks.
 
 ## Purpose
 Provide TypeScript-specific implementation details for the Global Standards.
@@ -17,7 +17,7 @@ Provide TypeScript-specific implementation details for the Global Standards.
 | **CI/CD** | `ops_standards.md` |
 | **Documentation** | `documentation_standards.md` |
 | **Frontend** | `frontend_standards.md` |
-| **Examples** | `examples.md` |
+| **Examples** | `example_standards.md` |
 | **Forbidden** | `forbidden_standards.md` |
 
 ## TypeScript Persona
@@ -31,7 +31,7 @@ Provide TypeScript-specific implementation details for the Global Standards.
 
 When asked to write TypeScript code:
 
-1. Read `/master_instructions.md` for the plan.
+1. Read `/master_standards.md` for the plan.
 2. Read `languages/typescript/coding_standards.md` for style.
-3. Read `languages/typescript/examples.md` for templates.
+3. Read `languages/typescript/example_standards.md` for templates.
 4. Check `languages/typescript/forbidden_standards.md` before finalizing.

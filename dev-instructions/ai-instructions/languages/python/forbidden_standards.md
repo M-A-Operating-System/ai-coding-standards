@@ -1,8 +1,8 @@
 # Python Forbidden Patterns
-Implementation of: /forbidden_patterns.md
+Implementation of: /forbidden_standards.md
 
 ## Relationship to Standards
-This file provides the Python-specific implementation ("How") for the universally forbidden patterns defined in `/forbidden_patterns.md` ("What").
+This file provides the Python-specific implementation ("How") for the universally forbidden patterns defined in `/forbidden_standards.md` ("What").
 
 
 ## Strictly Forbidden

@@ -64,12 +64,12 @@ Review the following code for compliance with our Python standards. If any requi
 ```
 
 **Implementation Notes**:
-- [ ] Uses: clarifying_questions, python/testing_standards
+- [ ] Uses: clarifying_questions, languages/python/testing_standards.md
 - [ ] Orchestrates: code_review, documentation feedback
 ---
 
 ## References
-- Related skills: clarifying_questions.md, chain_of_thought.md
+- Related skills: clarifying_questions.md, create_skills.md
 - Personas: developer.md, quality_engineer.md
 - Prompt templates: code_review.md
 

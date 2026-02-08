@@ -11,7 +11,7 @@ This repository is divided into two main components:
     *   **Structure**:
         *   `ai-instructions/`: Markdown files defining rules (Security, Architecture, etc.).
         *   `ai-instructions/personas/`: Role definitions (Developer, PM, QA).
-        *   `scripts/`: PowerShell automation for Confluence sync (`download-confluence.ps1`, `upload-confluence.ps1`).
+        *   `scripts/`: Automation for Confluence sync (`download_confluence.py`, `upload_confluence.py`).
     *   **Key File**: `ai-instructions/ai-context.json` maps standards to files.
 
 2.  **`ai-agile/` (Workspace/Usage)**:
