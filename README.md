@@ -129,5 +129,12 @@ It is now a **primary responsibility of the Development Manager** to take owners
 
 ## 🛠 Contributing
 
+We welcome contributions and feedback through either of these paths:
+
+1. **GitHub Discussions** (recommended for new ideas, proposals, and alignment):
+  - https://github.com/M-A-Operating-System/ai-coding-standards/discussions
+2. **Direct Commit Suggestions** (recommended for small, concrete improvements):
+  - Propose specific text/code edits as commit-ready suggestions (small, focused, easy to review).
+
 1. **Global Changes**: Edit files in `dev-instructions/` for rules that apply to all languages.
 2. **Language Changes**: Edit files in `dev-instructions/ai-instructions/languages/<lang>/` for syntax or tool-specific updates.
