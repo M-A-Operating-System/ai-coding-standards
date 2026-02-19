@@ -3,35 +3,29 @@ confluence2md.py
 Converts all .xhtml files in the confluence folder to Markdown (.md) files in the generated-materials folder.
 """
 
+
 import os
+import json
 from pathlib import Path
 from bs4 import BeautifulSoup, Tag
 
-def load_config(config_path):
-    config = {}
-    if Path(config_path).exists():
-        with open(config_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                if line.strip() and not line.strip().startswith('#') and '=' in line:
-                    k, v = line.split('=', 1)
-                    config[k.strip()] = v.strip()
-    return config
+# Load ai-agile.json config
+JSON_CONFIG_PATH = Path(__file__).parent.parent.parent / 'ai-agile' / 'ai-agile.json'
+with open(JSON_CONFIG_PATH, 'r', encoding='utf-8') as f:
+    json_config = json.load(f)
 
-
-CONFIG_PATH = Path(__file__).parent.parent.parent / 'ai-agile' / 'ai-agile.config'
-config = load_config(CONFIG_PATH)
-
-SOURCE_DIR = config.get('SOURCE_MATERIAL_PATH', 'source-material/confluence')
-DEST_DIR = config.get('GENERATED_MATERIAL_PATH', 'source-material/generated-materials')
+# Get source and output directories from config
+source_dir = json_config['process']['steps']['SourceMaterial']['subfolders']['confluence']
+output_dir = json_config['process']['steps']['GeneratedMaterials']['folder'] + '/canonical-requirements'
 
 # Assume both are relative to ai-agile folder
 AI_AGILE_BASE = Path(__file__).parent.parent.parent / 'ai-agile'
-CONFLUENCE_DIR = AI_AGILE_BASE / SOURCE_DIR
-OUTPUT_DIR = AI_AGILE_BASE / DEST_DIR
+CONFLUENCE_DIR = AI_AGILE_BASE / source_dir
+OUTPUT_DIR = AI_AGILE_BASE / output_dir
 
-print(f"[DEBUG] CONFIG_PATH: {CONFIG_PATH}")
-print(f"[DEBUG] SOURCE_DIR: {SOURCE_DIR}")
-print(f"[DEBUG] DEST_DIR: {DEST_DIR}")
+print(f"[DEBUG] JSON_CONFIG_PATH: {JSON_CONFIG_PATH}")
+print(f"[DEBUG] SOURCE_DIR: {source_dir}")
+print(f"[DEBUG] OUTPUT_DIR: {output_dir}")
 print(f"[DEBUG] AI_AGILE_BASE: {AI_AGILE_BASE}")
 print(f"[DEBUG] CONFLUENCE_DIR (absolute): {CONFLUENCE_DIR.resolve()}")
 print(f"[DEBUG] OUTPUT_DIR (absolute): {OUTPUT_DIR.resolve()}")
@@ -40,11 +34,6 @@ if not CONFLUENCE_DIR.exists():
     print(f"[ERROR] Source directory does not exist: {CONFLUENCE_DIR.resolve()}")
     exit(1)
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-found = False
-
-# Recursively search for .xhtml files in all subfolders
-found = False
 
 
 def print_tree(path, prefix=""):

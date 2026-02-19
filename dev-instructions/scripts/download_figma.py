@@ -5,12 +5,22 @@ Download all files in a Figma Project into the ai-agile SourceMaterial folder.
 
 Behavior mirrors the existing Confluence sync scripts in this repo:
 - Auto-detects the ai-agile root (ai-agile.json) when possible
-- Reads local credentials from <output_dir>/.env (never commit)
+- Reads Figma credentials from .ai-agile/ai-agile.json in the user's home directory
 - Writes deterministic JSON artifacts into SourceMaterial (read-only evidence)
 
 Required:
 - FIGMA_TOKEN (Personal Access Token)
 - FIGMA_PROJECT_ID
+
+Alternative (recommended): store non-secret settings in repo-local ai-agile/ai-agile.json
+and keep secrets in a user-home ai-agile.json.
+
+Repo-local config (non-secret):
+- integrations.figma.shareUrl (e.g. https://www.figma.com/files/team/<teamId>/project/<projectId>/...)
+- integrations.figma.apiBase
+
+User-home config (secrets):
+- secrets.figma.token
 
 Typical run:
   python "dev-instructions\scripts\download_figma.py" --no-file-json
@@ -34,9 +44,11 @@ import hashlib
 import json
 import os
 import re
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional
+from urllib.parse import quote
 
 import requests
 
@@ -44,8 +56,23 @@ import requests
 FIGMA_API_BASE_DEFAULT = "https://api.figma.com"
 
 
+def _safe_get(dct: dict[str, Any], path: list[str]) -> Any:
+    cur: Any = dct
+    for key in path:
+        if not isinstance(cur, dict):
+            return None
+        cur = cur.get(key)
+    return cur
+
+
+def _coerce_str(value: Any) -> Optional[str]:
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    return None
+
+
 def _get_env_timeout(default: float = 30.0) -> float:
-    value = os.environ.get("FIGMA_HTTP_TIMEOUT")
+    # value = os.environ.get("FIGMA_HTTP_TIMEOUT")
     if value is None:
         return default
     try:
@@ -59,7 +86,7 @@ REQUEST_TIMEOUT = DEFAULT_TIMEOUT
 
 
 def load_env(env_path: Path) -> dict[str, str]:
-    """Load environment variables from a .env file (simple KEY=VALUE lines)."""
+    """Load Figma credentials from .ai-agile/ai-agile.json in the user's home directory."""
     env: dict[str, str] = {}
     if not env_path.exists():
         return env
@@ -94,6 +121,91 @@ def _load_json(path: Path) -> dict[str, Any]:
         return json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
         raise RuntimeError(f"Invalid JSON in {path}: {e}") from e
+
+
+def _parse_figma_share_url(share_url: str) -> dict[str, str]:
+    """Parse a Figma share URL and return discovered IDs.
+
+    Supported patterns (examples):
+    - https://www.figma.com/files/team/<teamId>/project/<projectId>/...
+
+    Returns:
+      {"teamId": "...", "projectId": "..."} where present.
+    """
+    s = (share_url or "").strip()
+    if not s:
+        return {}
+
+    # Most common project URL:
+    m = re.search(r"figma\.com/files/team/(?P<team>\d+)/project/(?P<project>\d+)", s)
+    if m:
+        return {"teamId": m.group("team"), "projectId": m.group("project")}
+
+    # Fallback: try to at least find /project/<id>
+    m2 = re.search(r"/project/(?P<project>\d+)", s)
+    if m2:
+        return {"projectId": m2.group("project")}
+
+    return {}
+
+
+def _iter_user_config_candidates() -> list[Path]:
+    """Return candidate locations for a user-home ai-agile.json.
+
+    Order:
+    1) AI_AGILE_USER_CONFIG (explicit)
+    2) ~/.ai-agile/ai-agile.json
+    3) ~/ai-agile.json
+    4) %APPDATA%/ai-agile/ai-agile.json (Windows)
+    """
+    out: list[Path] = []
+    # explicit = os.environ.get("AI_AGILE_USER_CONFIG")
+    if explicit:
+        out.append(Path(explicit).expanduser())
+
+    home = Path.home()
+    out.append(home / ".ai-agile" / "ai-agile.json")
+    out.append(home / "ai-agile.json")
+
+    # appdata = os.environ.get("APPDATA")
+    if appdata:
+        out.append(Path(appdata) / "ai-agile" / "ai-agile.json")
+
+    # De-dupe while preserving order
+    seen: set[str] = set()
+    deduped: list[Path] = []
+    for p in out:
+        key = str(p)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(p)
+    return deduped
+
+
+def _load_user_config() -> Optional[dict[str, Any]]:
+    for p in _iter_user_config_candidates():
+        try:
+            if p.exists() and p.is_file():
+                return _load_json(p)
+        except Exception:
+            # Fail closed: ignore broken user config and continue.
+            continue
+    return None
+
+
+def _read_figma_secret(user_cfg: dict[str, Any], key: str) -> Optional[str]:
+    """Read figma secret values from user config (secrets.figma.<key>)."""
+    if not isinstance(user_cfg, dict):
+        return None
+
+    return _coerce_str(_safe_get(user_cfg, ["secrets", "figma", key]))
+
+
+def _read_figma_nonsecret(repo_cfg: dict[str, Any], key: str) -> Optional[str]:
+    if not isinstance(repo_cfg, dict):
+        return None
+    return _coerce_str(_safe_get(repo_cfg, ["integrations", "figma", key]))
 
 
 def _find_ai_agile_root(start: Path, max_up: int = 8) -> Optional[Path]:
@@ -254,6 +366,35 @@ def _write_json(path: Path, obj: Any) -> None:
     path.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def get_file_images(session: requests.Session, api_base: str, file_key: str, node_ids: list[str], token: str, formats: list[str] = ["png"], verbose: bool = False) -> dict:
+    """
+    Download rendered images for a Figma file's node IDs in the specified formats (png/svg).
+    Returns a dict: {format: {node_id: image_url}}
+    """
+    out = {}
+    for fmt in formats:
+        url = f"{api_base}/v1/images/{file_key}"
+        params = {
+            "ids": ",".join(node_ids),
+            "format": fmt,
+        }
+        headers = {"X-Figma-Token": token}
+        if verbose:
+            print(f"[DEBUG] GET {url} params={params}")
+        resp = session.get(url, params=params, headers=headers, timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+        images = data.get("images", {})
+        if verbose:
+            print(f"[DEBUG] Figma API returned {len(images)} images for format {fmt}")
+            for node_id in node_ids:
+                img_url = images.get(node_id)
+                print(f"[DEBUG] node_id={node_id} format={fmt} url={img_url}")
+        out[fmt] = images
+        time.sleep(1)  # Sleep 1 second between requests to avoid rate limits
+    return out
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Download all Figma files in a project into ai-agile SourceMaterial.")
     parser.add_argument(
@@ -271,14 +412,20 @@ def main() -> int:
     parser.add_argument(
         "--api-base",
         dest="api_base",
-        default=os.environ.get("FIGMA_API_BASE", FIGMA_API_BASE_DEFAULT),
-        help=f"Figma API base URL (default: {FIGMA_API_BASE_DEFAULT})",
+        default=None,
+        help=f"Figma API base URL (default: {FIGMA_API_BASE_DEFAULT}; can also come from ai-agile.json integrations.figma.apiBase)",
+    )
+    parser.add_argument(
+        "--share-url",
+        dest="share_url",
+        default=None,
+        help="Figma project share URL (e.g. https://www.figma.com/files/team/<teamId>/project/<projectId>/...)",
     )
     parser.add_argument(
         "--project-id",
         dest="project_id",
         default=None,
-        help="Figma Project ID (or set FIGMA_PROJECT_ID in .env/environment)",
+        help="Figma Project ID (or derive from --share-url / ai-agile.json integrations.figma.shareUrl)",
     )
     parser.add_argument(
         "--token",
@@ -321,6 +468,7 @@ def main() -> int:
     REQUEST_TIMEOUT = max(args.timeout, 0.1)
 
     output_dir: Path
+    repo_cfg: dict[str, Any] = {}
     if args.output_dir:
         output_dir = Path(args.output_dir).expanduser().resolve()
     else:
@@ -335,26 +483,63 @@ def main() -> int:
         if not ai_agile_json_path.exists():
             raise RuntimeError(
                 f"Expected ai-agile.json at {ai_agile_json_path}, but it was not found. "
-                "Run dev-instructions/scripts/initialize.pl or create ai-agile/ai-agile.json manually."
+                "Run dev-instructions/scripts/initialize.py or create ai-agile/ai-agile.json manually."
             )
 
-        cfg = _load_json(ai_agile_json_path)
-        rel = _get_figma_rel_from_ai_agile_json(cfg)
+        repo_cfg = _load_json(ai_agile_json_path)
+        rel = _get_figma_rel_from_ai_agile_json(repo_cfg)
         output_dir = (ai_agile_root / rel).resolve()
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    env = load_env(output_dir / ".env")
-    token = args.token or env.get("FIGMA_TOKEN") or os.environ.get("FIGMA_TOKEN")
-    project_id = args.project_id or env.get("FIGMA_PROJECT_ID") or os.environ.get("FIGMA_PROJECT_ID")
+    # Read from ~/.ai-agile/ai-agile.json instead of .env
+    from os.path import expanduser
+    import json
+    user_config_path = os.path.join(expanduser('~'), '.ai-agile', 'ai-agile.json')
+    with open(user_config_path, 'r', encoding='utf-8') as f:
+        user_config = json.load(f)
+    env = user_config.get('figma', {})
+
+    user_cfg = _load_user_config() or {}
+
+    # Non-secret defaults (repo config)
+    cfg_share_url = _read_figma_nonsecret(repo_cfg, "shareUrl")
+    cfg_project_id = _read_figma_nonsecret(repo_cfg, "projectId")
+    cfg_api_base = _read_figma_nonsecret(repo_cfg, "apiBase")
+
+    share_url = args.share_url or cfg_share_url
+    derived: dict[str, str] = _parse_figma_share_url(share_url) if share_url else {}
+
+    token = (
+        args.token
+        or env.get("token")
+        or _read_figma_secret(user_cfg, "token")
+        or env.get("FIGMA_TOKEN")
+    )
+
+    project_id = (
+        args.project_id
+        or env.get("projectId")
+        or derived.get("projectId")
+        or cfg_project_id
+        or _read_figma_secret(user_cfg, "projectId")
+        or env.get("FIGMA_PROJECT_ID")
+    )
+
+    api_base = (
+        args.api_base
+        or env.get("apiBase")
+        or cfg_api_base
+        or FIGMA_API_BASE_DEFAULT
+    )
 
     if not token:
         raise RuntimeError(
-            "Missing FIGMA_TOKEN. Provide --token, set FIGMA_TOKEN in environment, or add it to <output_dir>/.env."
+            "Missing FIGMA_TOKEN. Provide --token, set FIGMA_TOKEN in environment, or add it to user-home ai-agile.json (secrets.figma.token)."
         )
     if not project_id:
         raise RuntimeError(
-            "Missing FIGMA_PROJECT_ID. Provide --project-id, set FIGMA_PROJECT_ID in environment, or add it to <output_dir>/.env."
+            "Missing FIGMA projectId. Provide --project-id, set --share-url, or set integrations.figma.shareUrl/projectId in ai-agile/ai-agile.json."
         )
 
     retrieved_at = datetime.datetime.now(datetime.UTC).isoformat()
@@ -363,7 +548,7 @@ def main() -> int:
 
     files = list_project_files(
         session,
-        args.api_base,
+        api_base,
         project_id,
         token=token,
         page_size=args.page_size,
@@ -377,7 +562,8 @@ def main() -> int:
     listing_obj = {
         "projectId": project_id,
         "retrievedAt": retrieved_at,
-        "apiBase": args.api_base,
+        "apiBase": api_base,
+        "shareUrl": share_url,
         "files": [
             {
                 "key": f.key,
@@ -399,47 +585,92 @@ def main() -> int:
     files_dir = output_dir / "files"
     files_dir.mkdir(parents=True, exist_ok=True)
 
-    if not args.no_file_json:
-        for f in files:
-            safe_name = _safe_filename(f.name)
-            out_path = files_dir / f"{f.key}-{safe_name}.json"
-            if out_path.exists() and not args.force:
-                skipped += 1
-                file_outputs.append(
-                    {
-                        "key": f.key,
-                        "name": f.name,
-                        "lastModified": f.last_modified,
-                        "url": f"https://www.figma.com/file/{f.key}",
-                        "relativePath": str(out_path.relative_to(output_dir)).replace("\\", "/"),
-                        "sha256": None,
-                        "status": "skipped-existing",
-                    }
-                )
-                continue
+    images_dir = output_dir / "images"
+    images_dir.mkdir(parents=True, exist_ok=True)
 
-            data = get_file_json(session, args.api_base, f.key, token=token, verbose=args.verbose)
-            raw = (json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
-            sha = _sha256_bytes(raw)
-            out_path.write_bytes(raw)
-            downloaded += 1
+    for f in files:
+        safe_name = _safe_filename(f.name)
+        out_path = files_dir / f"{f.key}-{safe_name}.json"
+        file_status = ""
+        if out_path.exists() and not args.force:
+            file_status = "skipped-existing"
+            with out_path.open("r", encoding="utf-8") as fp:
+                data = json.load(fp)
+        else:
+            data = get_file_json(session, api_base, f.key, token=token, verbose=args.verbose)
+            with out_path.open("w", encoding="utf-8") as fp:
+                json.dump(data, fp, indent=2)
+            file_status = "downloaded"
 
-            file_outputs.append(
-                {
-                    "key": f.key,
-                    "name": f.name,
-                    "lastModified": f.last_modified,
-                    "url": f"https://www.figma.com/file/{f.key}",
-                    "relativePath": str(out_path.relative_to(output_dir)).replace("\\", "/"),
-                    "sha256": sha,
-                    "status": "downloaded",
-                }
-            )
+        # Collect all node IDs for image export
+        node_ids = []
+        if isinstance(data, dict):
+            doc = data.get("document")
+            if doc:
+                def collect_nodes(node):
+                    out = []
+                    if isinstance(node, dict):
+                        if "id" in node:
+                            out.append(node["id"])
+                        for child in node.get("children", []):
+                            out.extend(collect_nodes(child))
+                    return out
+                node_ids = collect_nodes(doc)
+
+        # Download images for all node IDs (PNG and SVG)
+        image_outputs = []
+        if node_ids:
+            img_out_dir = images_dir / f.key
+            img_out_dir.mkdir(parents=True, exist_ok=True)
+            images = get_file_images(session, api_base, f.key, node_ids, token=token, formats=["png", "svg"], verbose=args.verbose)
+            for fmt, node_map in images.items():
+                for node_id, url in node_map.items():
+                    if not url:
+                        continue
+                    ext = fmt
+                    img_path = img_out_dir / f"{node_id}.{ext}"
+                    try:
+                        resp = session.get(url, timeout=30)
+                        resp.raise_for_status()
+                        with img_path.open("wb") as img_fp:
+                            img_fp.write(resp.content)
+                        image_outputs.append({
+                            "nodeId": node_id,
+                            "format": fmt,
+                            "relativePath": str(img_path.relative_to(output_dir)).replace("\\", "/"),
+                            "status": "downloaded"
+                        })
+                        if args.verbose:
+                            print(f"[IMAGE] Downloaded {fmt} for node {node_id} to {img_path}")
+                    except Exception as e:
+                        image_outputs.append({
+                            "nodeId": node_id,
+                            "format": fmt,
+                            "relativePath": str(img_path.relative_to(output_dir)).replace("\\", "/"),
+                            "status": f"error: {e}"
+                        })
+                        if args.verbose:
+                            print(f"[IMAGE] Failed to download {fmt} for node {node_id}: {e}")
+
+        file_outputs.append(
+            {
+                "key": f.key,
+                "name": f.name,
+                "lastModified": f.last_modified,
+                "url": f"https://www.figma.com/file/{f.key}",
+                "relativePath": str(out_path.relative_to(output_dir)).replace("\\", "/"),
+                "sha256": hashlib.sha256(json.dumps(data, sort_keys=True).encode("utf-8")).hexdigest() if data else None,
+                "status": file_status,
+                "images": image_outputs,
+            }
+        )
+    print(f"File JSON: downloaded/skipped={len(file_outputs)}")
 
     manifest_obj = {
         "projectId": project_id,
         "retrievedAt": retrieved_at,
-        "apiBase": args.api_base,
+        "apiBase": api_base,
+        "shareUrl": share_url,
         "outputDir": str(output_dir).replace("\\", "/"),
         "counts": {
             "projectFiles": len(files),

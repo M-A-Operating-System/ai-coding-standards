@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""initialize.pl (Python)
+"""initialize.py
 
 Interactive initializer for this repository layout.
 
@@ -10,10 +10,10 @@ What it does:
 - Rewrites basePaths to match the selected repo root
 
 Run:
-  python dev-instructions/scripts/initialize.pl
+    python dev-instructions/scripts/initialize.py
 
 Optional non-interactive:
-  python dev-instructions/scripts/initialize.pl --root C:\\path\\to\\dev-prompts
+    python dev-instructions/scripts/initialize.py --root C:\\path\\to\\dev-prompts
 """
 
 from __future__ import annotations

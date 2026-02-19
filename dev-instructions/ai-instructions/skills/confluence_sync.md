@@ -10,10 +10,10 @@ Use the repository’s scripts to download/upload Confluence content reliably (J
 Goal: Pull the latest Confluence material into the local workspace, then (optionally) upload edits safely.
 
 Pre-reqs:
-- Ensure ai-agile/ai-agile.json exists (create it with dev-instructions/scripts/initialize.pl)
+- Ensure ai-agile/ai-agile.json exists (create it with dev-instructions/scripts/initialize.py)
 - Ensure ai-agile/01_source-material/confluence contains:
   - confluence.config (BaseUrl, PageId)
-  - .env (CONF_EMAIL, CONF_TOKEN)  [never paste these into chat]
+	- .ai-agile/ai-agile.json in your home directory (confluence section: email, token, baseUrl)  [never paste these into chat]
 
 Download latest (preferred):
 1) From repo root, run:

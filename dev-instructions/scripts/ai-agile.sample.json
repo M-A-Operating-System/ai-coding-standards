@@ -33,5 +33,28 @@
         "purpose": "Design docs, technical specs, implementation plans."
       }
     }
+  },
+  "integrations": {
+    "confluence": {
+      "pages": {
+        "parentPageUrls": [],
+        "maxDepth": 50,
+        "includeAttachments": true
+      }
+    },
+    "figma": {
+      "shareUrl": "",
+      "apiBase": "https://api.figma.com",
+      "download": {
+        "fetchFileJson": true
+      },
+      "render": {
+        "enabled": true,
+        "formats": ["png"],
+        "scale": 1.0,
+        "nodeTypes": ["FRAME"],
+        "maxNodes": 5000
+      }
+    }
   }
 }

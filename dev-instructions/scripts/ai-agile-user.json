@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "description": "User-home secrets for dev-prompts tooling. Copy to ~/.ai-agile/ai-agile.json (or set AI_AGILE_USER_CONFIG to your chosen path) and fill in tokens locally.",
+    "doNotCommit": true
+  },
+  "secrets": {
+    "figma": {
+      "token": ""
+    },
+    "confluence": {
+      "sites": [
+        {
+          "baseUrl": "https://example.atlassian.net",
+          "email": "",
+          "token": ""
+        }
+      ]
+    }
+  }
+}

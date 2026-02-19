@@ -41,7 +41,7 @@ Do not deduplicate or resolve conflicts in this phase.
 - **Batch mode (DEFAULT)**: One or more source documents under `SourceMaterial`, processed as a set.
   - Default batch scope: **all documents under the folder configured as `process.steps.SourceMaterial.folder`**, scanned recursively.
   - Default include patterns (documents): `**/*.xhtml`, `**/*.md`.
-  - Default exclude patterns (operational/config/credentials): `**/.env`, `**/*.config`, `**/confluence.config`.
+  - Default exclude patterns (operational/config/credentials): `**/.ai-agile/ai-agile.json`, `**/*.config`, `**/confluence.config`.
   - If the user provides include/exclude rules, apply them deterministically and record the final resolved set in the batch manifest.
 - Source documents are immutable evidence. Never write to, rename, move, or delete anything under `SourceMaterial`.
 - BRD section definitions in `dev-instructions/scripts/brd_sections.json` (read-only). This file is required to assign a mandatory `brdSectionId` to every requirement.

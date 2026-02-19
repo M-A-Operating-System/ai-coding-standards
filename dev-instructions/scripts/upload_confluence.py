@@ -5,12 +5,13 @@ import json
 import hashlib
 from pathlib import Path
 from typing import Dict, Any, Optional
+from urllib.parse import urlparse
 
 import requests
 
 
 def _get_env_timeout(default: float = 15.0) -> float:
-    value = os.environ.get("CONFLUENCE_HTTP_TIMEOUT")
+    # value = os.environ.get("CONFLUENCE_HTTP_TIMEOUT")
     if value is None:
         return default
     try:
@@ -21,6 +22,100 @@ def _get_env_timeout(default: float = 15.0) -> float:
 
 DEFAULT_TIMEOUT = _get_env_timeout(15.0)
 REQUEST_TIMEOUT = DEFAULT_TIMEOUT
+
+
+def _safe_get(dct: Dict[str, Any], path: list, default: Any = None) -> Any:
+    cur: Any = dct
+    for key in path:
+        if not isinstance(cur, dict):
+            return default
+        cur = cur.get(key)
+    return cur if cur is not None else default
+
+
+def _normalize_base_url(base_url: str) -> str:
+    return (base_url or "").strip().rstrip("/").lower()
+
+
+def _iter_user_config_candidates() -> list[Path]:
+    out: list[Path] = []
+    # explicit = os.environ.get("AI_AGILE_USER_CONFIG")
+    if explicit:
+        out.append(Path(explicit).expanduser())
+
+    home = Path.home()
+    out.append(home / ".ai-agile" / "ai-agile.json")
+    out.append(home / "ai-agile.json")
+
+    # appdata = os.environ.get("APPDATA")
+    if appdata:
+        out.append(Path(appdata) / "ai-agile" / "ai-agile.json")
+
+    seen: set[str] = set()
+    deduped: list[Path] = []
+    for p in out:
+        key = str(p)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(p)
+    return deduped
+
+
+def _load_json(path: Path) -> Dict[str, Any]:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        raise RuntimeError(f"Invalid JSON in {path}: {e}") from e
+
+
+def _load_user_config() -> Dict[str, Any]:
+    for p in _iter_user_config_candidates():
+        try:
+            if p.exists() and p.is_file():
+                return _load_json(p)
+        except Exception:
+            continue
+    return {}
+
+
+def _get_site_creds(user_cfg: Dict[str, Any], base_url: str) -> tuple[str, str]:
+    want = _normalize_base_url(base_url)
+    sites = _safe_get(user_cfg, ["secrets", "confluence", "sites"], [])
+    if isinstance(sites, list):
+        for site in sites:
+            if not isinstance(site, dict):
+                continue
+            site_base = site.get("baseUrl")
+            if isinstance(site_base, str) and _normalize_base_url(site_base) == want:
+                email = site.get("email")
+                token = site.get("token")
+                if isinstance(email, str) and email.strip() and isinstance(token, str) and token.strip():
+                    return email.strip(), token.strip()
+
+    # Read from ~/.ai-agile/ai-agile.json instead of environment variables
+    from os.path import expanduser
+    import json
+    user_config_path = os.path.join(expanduser('~'), '.ai-agile', 'ai-agile.json')
+    with open(user_config_path, 'r', encoding='utf-8') as f:
+        user_config = json.load(f)
+    env_base = user_config.get('confluence', {}).get('baseUrl')
+    env_email = user_config.get('confluence', {}).get('email')
+    env_token = user_config.get('confluence', {}).get('token')
+    if env_base and _normalize_base_url(env_base) == want and env_email and env_token:
+        return env_email.strip(), env_token.strip()
+
+    raise RuntimeError(
+        f"No Confluence credentials found for {base_url}. "
+        "Add an entry to user-home ai-agile.json secrets.confluence.sites[] or set BASE_URL/CONF_EMAIL/CONF_TOKEN."
+    )
+
+
+def _extract_base_url_from_source(source_url: str) -> str:
+    parsed = urlparse(source_url)
+    if not parsed.scheme or not parsed.netloc:
+        raise ValueError(f"Invalid Confluence source URL: {source_url}")
+    return f"{parsed.scheme}://{parsed.netloc}".rstrip("/")
 
 
 def load_env(env_path: Path) -> Dict[str, str]:
@@ -224,7 +319,7 @@ def main():
         if not ai_agile_json_path.exists():
             raise RuntimeError(
                 f"Expected ai-agile.json at {ai_agile_json_path}, but it was not found. "
-                "Run dev-instructions/scripts/initialize.pl or create ai-agile/ai-agile.json manually."
+                "Run dev-instructions/scripts/initialize.py or create ai-agile/ai-agile.json manually."
             )
 
         ai_agile_cfg = load_ai_agile_json(ai_agile_json_path)
@@ -235,34 +330,12 @@ def main():
         print(f"Source directory '{source_dir}' does not exist.")
         return
 
-    if not (source_dir / "confluence.config").exists():
-        print(f"Expected confluence.config in '{source_dir}', but it was not found.")
-        return
-
-    env = load_env(source_dir / ".env")
-    config = load_config(source_dir / "confluence.config")
-    base_url = config.get("BaseUrl") or env.get("BASE_URL") or os.environ.get("BASE_URL")
-    email = env.get("CONF_EMAIL") or os.environ.get("CONF_EMAIL")
-    token = env.get("CONF_TOKEN") or os.environ.get("CONF_TOKEN")
     dry_run = args.dry_run
 
     global REQUEST_TIMEOUT
     REQUEST_TIMEOUT = max(args.timeout, 0.1)
 
-    if not all([base_url, email, token]):
-        print("Missing credentials: set BASE_URL, CONF_EMAIL, and CONF_TOKEN via .env or environment.")
-        return
-
-    headers = get_auth_header(email, token)
-    # Test authentication
-    try:
-        test_url = f"{base_url}/wiki/rest/api/space?limit=1"
-        resp = requests.get(test_url, headers=headers, timeout=REQUEST_TIMEOUT)
-        resp.raise_for_status()
-        print(f"Authenticated with Confluence at {base_url}.")
-    except Exception as e:
-        print(f"Confluence auth failed: {e}")
-        return
+    user_cfg = _load_user_config()
 
     files = sorted(source_dir.glob("*.xhtml"))
     if not files:
@@ -285,6 +358,19 @@ def main():
         meta, body = parse_front_matter(content)
         if not meta or 'confluence_id' not in meta:
             print(f"Skipping file with no front-matter or confluence_id: {file.name}")
+            continue
+
+        source_url = meta.get('source')
+        if not isinstance(source_url, str) or not source_url.strip():
+            print(f"Skipping file with no source URL in front-matter: {file.name}")
+            continue
+
+        try:
+            base_url = _extract_base_url_from_source(source_url)
+            email, token = _get_site_creds(user_cfg, base_url)
+            headers = get_auth_header(email, token)
+        except Exception as cred_err:
+            print(f"Skipping {file.name} (credentials error): {cred_err}")
             continue
         # Check for content changes using hash
         change_detected = True
