@@ -1,0 +1,16 @@
+-- Table: LegalEntityESG (DMC00000115)
+-- Description: The LegalEntityESG Concept provides details of ESG ratings associated with the entity
+CREATE TABLE GOLD."LEGALENTITYESG" (
+  "_ID" INTEGER AUTOINCREMENT PRIMARY KEY,
+  "_PID" INTEGER NOT NULL UNIQUE REFERENCES GOLD."LEGALENTITY"("_ID"),
+  "LEGALENTITYESGFIELD" INTEGER REFERENCES GOLD."LOOKUP_LEGALENTITYESGFIELDTYPES"("_ID"),
+  "LEGALENTITYESGVALUE" NUMBER(18,4),
+  "LEGALENTITYESGFRAMEWORK" INTEGER REFERENCES GOLD."LOOKUP_LEGALENTITYESGFRAMEWORKTYPES"("_ID")
+);
+
+COMMENT ON TABLE GOLD."LEGALENTITYESG" IS '[DMC00000115] The LegalEntityESG Concept provides details of ESG ratings associated with the entity';
+COMMENT ON COLUMN GOLD."LEGALENTITYESG"."_ID" IS 'Primary key - auto-generated surrogate identifier';
+COMMENT ON COLUMN GOLD."LEGALENTITYESG"."_PID" IS '[DMC00000106] Foreign key to parent concept table: LegalEntity (ONE_TO_ONE relationship)';
+COMMENT ON COLUMN GOLD."LEGALENTITYESG"."LEGALENTITYESGFIELD" IS '[DMA00000677] LegalEntityESGField - FK to lookup table: LegalEntityESGFieldTypes';
+COMMENT ON COLUMN GOLD."LEGALENTITYESG"."LEGALENTITYESGVALUE" IS '[DMA00000679] LegalEntityESGValue - The LegalEntityESGFrameworkValue indicates the current value of the specific field.';
+COMMENT ON COLUMN GOLD."LEGALENTITYESG"."LEGALENTITYESGFRAMEWORK" IS '[DMA00000678] LegalEntityESGFramework - FK to lookup table: LegalEntityESGFrameworkTypes';
