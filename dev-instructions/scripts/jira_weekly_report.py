@@ -35,6 +35,9 @@ def get_last_seven_days_range():
     return start.date().isoformat(), end.date().isoformat()
 
 def main():
+
+    # (Section moved to end of main)
+
     Path('ai-agile/02_generated_materials/jira').mkdir(parents=True, exist_ok=True)
     # Write H1 report title first with date range
     last7_start, last7_end = get_last_seven_days_range()
@@ -54,12 +57,60 @@ def main():
         [f'issuetype.name=Story', f'Status=Done', f'resolutiondate>={last7_start}', f'resolutiondate<={last7_end}'],
         write_mode='append'
     )
+
     # Section 3: Open Stories (append)
     run_jira2mdtable(
         'Open Stories',
         ['issuetype.name=Story', 'Status!=Done'],
         write_mode='append'
     )
+
+    # Section 4: Pivot Table (Status by Assignee)
+    # Use jira2mdpivot.py to append a pivot table of status by assignee
+    pivot_cmd = [
+        sys.executable,
+        os.path.join(os.path.dirname(__file__), 'jira2mdpivot.py'),
+        '--row-field', 'assignee',
+        '--column-field', 'status',
+        '--summary', 'count',
+        '--title', 'Ticket Count by Assignee and Status',
+        '--output', 'ai-agile/02_generated_materials/jira/weekly_jira_status_report.md'
+    ]
+    # Use append mode by reading, appending, and writing back
+    # Instead, read the pivot output and append to the report
+    import tempfile
+    with tempfile.NamedTemporaryFile('w+', delete=False, suffix='.md') as tmpf:
+        tmp_path = tmpf.name
+    pivot_cmd[pivot_cmd.index('--output') + 1] = tmp_path
+    subprocess.run(pivot_cmd, check=True)
+    with open(tmp_path, 'r', encoding='utf-8') as pf, open('ai-agile/02_generated_materials/jira/weekly_jira_status_report.md', 'a', encoding='utf-8') as rf:
+        rf.write('\n')
+        rf.write(pf.read())
+    os.remove(tmp_path)
+    # Section 5: Completed by Person Over Last 8 Weeks (append at very end)
+    from datetime import datetime, timedelta
+    today = datetime.now().date()
+    eight_weeks_ago = today - timedelta(weeks=8)
+    pivot_cmd2 = [
+        sys.executable,
+        os.path.join(os.path.dirname(__file__), 'jira2mdpivot.py'),
+        '--row-field', 'assignee',
+        '--column-field', 'resolvedWeek',
+        '--summary', 'count',
+        '--title', 'Completed by Person Over Last 8 Weeks',
+        '--filter', f'resolutiondate>={eight_weeks_ago.isoformat()}',
+        '--filter', 'status=Done',
+        '--output', 'ai-agile/02_generated_materials/jira/weekly_jira_status_report.md'
+    ]
+    import tempfile
+    with tempfile.NamedTemporaryFile('w+', delete=False, suffix='.md') as tmpf2:
+        tmp_path2 = tmpf2.name
+    pivot_cmd2[pivot_cmd2.index('--output') + 1] = tmp_path2
+    subprocess.run(pivot_cmd2, check=True)
+    with open(tmp_path2, 'r', encoding='utf-8') as pf2, open('ai-agile/02_generated_materials/jira/weekly_jira_status_report.md', 'a', encoding='utf-8') as rf2:
+        rf2.write('\n')
+        rf2.write(pf2.read())
+    os.remove(tmp_path2)
     print("Combined Jira report written to ai-agile/02_generated_materials/jira/weekly_jira_status_report.md.")
 
 if __name__ == "__main__":
