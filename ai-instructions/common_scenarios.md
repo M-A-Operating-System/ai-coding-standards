@@ -1,6 +1,12 @@
 # Common Scenarios (The "What")
 Universal guidelines for handling common development scenarios with AI assistance.
 
+## 0. Design First Gate
+
+Run this gate before every implementation request. Full checklist: `master_standards.md §6`. Skill: `skills/design_review.md`.
+
+---
+
 ## 1. Code Review
 
 **Purpose**: Ensure code quality, security, and adherence to standards before merging.

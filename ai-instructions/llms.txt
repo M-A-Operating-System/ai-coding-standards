@@ -4,8 +4,10 @@
 # Global Entry Point
 - [Persona Selection Standards](persona_standards.md) - START HERE. Select the active persona and apply standards through that lens.
 - [Master Standards](master_standards.md) - Global rules (security-first priorities, permission gate, doc hierarchy).
+- [AI PDLC Standards](pdlc_standards.md) - Design First gate, issue tracking, Enhancement vs Bug rules, specifiable/testable requirements. Load for any implementation request.
 
 # Situation-Based Routing (Recommended)
+0) **Design First Gate**: For any implementation task, verify issue reference and design sign-off via `pdlc_standards.md` and `skills/design_review.md` BEFORE selecting a scenario.
 1) **Select Persona**: Use `persona_standards.md`, then load the corresponding file under `personas/`.
 2) **Identify the Situation**: Use `common_scenarios.md` to pick the right workflow (review, refactor, security audit, docs, deployment).
 3) **Pick the Implementation Layer**:
@@ -15,6 +17,7 @@
 5) **Reuse Skills**: Prefer the reusable patterns in `skills/` and orchestration patterns in `skills/agents.md`.
 
 # Core Standards (The "What")
+- [AI PDLC Standards](pdlc_standards.md) - Design First, issue tracking, Enhancement vs Bug, specifiable/testable requirements.
 - [Architecture Standards](architecture_standards.md) - The Five-View Architecture framework.
 - [Security Standards](security_standards.md) - OWASP/NIST controls and security requirements.
 - [Testing Standards](testing_standards.md) - Testing strategies, pyramids, and quality gates.
@@ -31,3 +34,9 @@
 - [Python Standards](languages/python/master_standards.md) - Python-specific implementation details.
 - [TypeScript Standards](languages/typescript/master_standards.md) - TypeScript-specific implementation details.
 - [PowerShell Standards](languages/powershell/master_standards.md) - PowerShell-specific implementation details.
+
+# Issue Management Skills
+- [Create Issue](skills/create_issue.md) - Open a new work item with correct PDLC tags and mandatory fields.
+- [Read Issue](skills/read_issue.md) - Extract and validate all fields and tags from an existing work item.
+- [Update Issue](skills/update_issue.md) - Modify fields and tags following PDLC tag mutation rules.
+- [Cancel Issue](skills/cancel_issue.md) - Close a work item as cancelled, preserving the full audit trail.

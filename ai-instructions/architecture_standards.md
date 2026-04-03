@@ -5,7 +5,11 @@ Applies to: All Backend Services
 Define the architecture expectations using the Five-View Architecture Framework.
 
 ## 1. Application View
+- **Design First**: All API contracts, data models, and UX flows must be defined in product documentation and approved (PDLC Phase 3 Sign-Off) before any implementation is generated.
 - **APIs First**: Design API contracts (OpenAPI, Proto, GraphQL Schema) before implementation.
+- **Data Model First**: ERD or schema defined before any migration or persistence code is written.
+- **UX Flows First**: User journeys and wireframes documented before any UI component is built.
+- **Traceability**: Every implemented endpoint, schema change, and UI component must trace back to a documented and approved product requirement.
 - **Protocol Selection**:
   - REST for resource-oriented public APIs.
   - gRPC for internal high-performance microservices.

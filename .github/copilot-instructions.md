@@ -1,7 +1,10 @@
+# Copilot instructions
 
-# Copilot instructions for dev-prompts
+Read `ai-instructions/llms.txt` — it is the complete map of all standards, routing rules, personas, skills, and agents for this repo.
 
-This repository is a standards knowledge-base plus Confluence sync tooling.
+Before any implementation task, read `ai-instructions/master_standards.md` (global rules and Design First Gate) and `ai-instructions/pdlc_standards.md` (issue tracking, work item types, and tag systems).
+
+Before modifying any file, propose the exact changes and wait for explicit approval.
 
 ## Big picture
 - `ai-instructions/`: source-of-truth AI standards + scripts
