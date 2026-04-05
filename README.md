@@ -14,46 +14,51 @@ The goal of this project is to ensure that all AI-generated code and documentati
 
 ## 📂 Repository Structure
 
-The core documentation is located in `dev-instructions/`.
-
 ```text
 .
-├── README.md                   # This file
-└── dev-instructions/
-    ├── ai-instructions/         # The knowledge base for AI (standards, skills, personas)
-    │   ├── llms.txt             # Documentation map / quick routing (start here if lost)
-    │   ├── ai-context.json      # Machine-readable context map
-    │   ├── persona_standards.md # 🚀 ENTRY POINT: Persona selection + routing
-    │   ├── master_standards.md  # Global standards (security-first, plan-of-action, permission gate)
-    │   ├── common_scenarios.md  # Situation-based workflows (review/refactor/security/docs/etc.)
-    │   ├── security_standards.md
-    │   ├── testing_standards.md
-    │   ├── ops_standards.md
-    │   ├── documentation_standards.md
-    │   ├── tools_standards.md
-    │   ├── architecture_standards.md
-    │   ├── api_standards.md
-    │   ├── frontend_standards.md
-    │   ├── data_standards.md
-    │   ├── forbidden_standards.md
-    │   ├── personas/            # 🎭 Role definitions (Developer, PM, QA, Data, DevOps, Cloud, Delivery)
-    │   ├── skills/              # Reusable prompt-engineering skills (skill cards)
-    │   ├── languages/           # Language-specific “How” (e.g., python, ...)
-    │   └── data/                # Database-specific “How” (e.g., postgres, ...)
-    └── scripts/                 # Automation tools (e.g., Confluence sync)
-        ├── download_confluence.py
-        └── upload_confluence.py
+├── README.md                      # This file
+├── ai-instructions/               # The knowledge base for AI (standards, skills, personas)
+│   ├── llms.txt                   # Documentation map / quick routing (start here if lost)
+│   ├── ai-context.json            # Machine-readable context map
+│   ├── persona_standards.md       # 🚀 ENTRY POINT: Persona selection + routing
+│   ├── master_standards.md        # Global standards (security-first, plan-of-action, permission gate)
+│   ├── common_scenarios.md        # Situation-based workflows (review/refactor/security/docs/etc.)
+│   ├── security_standards.md
+│   ├── testing_standards.md
+│   ├── ops_standards.md
+│   ├── documentation_standards.md
+│   ├── tools_standards.md
+│   ├── architecture_standards.md
+│   ├── api_standards.md
+│   ├── frontend_standards.md
+│   ├── data_standards.md
+│   ├── forbidden_standards.md
+│   ├── compliance_checklist.md
+│   ├── personas/                  # 🎭 Role definitions (Developer, PM, QA, Data, DevOps, Cloud, Delivery)
+│   ├── skills/                    # Reusable prompt-engineering skills (skill cards)
+│   ├── prompt_templates/          # Templates for prompt engineering and code review
+│   ├── languages/                 # Language-specific "How" (git, powershell, python, typescript)
+│   └── data/                      # Database-specific "How" (e.g., postgres)
+└── scripts/                       # Automation tools for Confluence, Jira, Figma, and Git integration
+    ├── download_confluence.py
+    ├── upload_confluence.py
+    ├── download_jira.py
+    ├── upload_jira.py
+    ├── download_figma.py
+    ├── download_gitActivity.py
+    ├── initialize.py
+    └── ...                        # Additional utility scripts
 ```
 
 Notes:
-- `ai-instructions/languages/` contains language-specific implementation guidance (the “How”) that supports the global standards (the “What”).
-- `ai-instructions/data/` contains database-specific implementation guidance (the “How”) that supports `data_standards.md`.
+- `ai-instructions/languages/` contains language-specific implementation guidance (the "How") that supports the global standards (the "What"). Supported languages: **git**, **powershell**, **python**, **typescript**.
+- `ai-instructions/data/` contains database-specific implementation guidance (the "How") that supports `data_standards.md`.
 
 ## 🚀 How to Use
 
 ### Project Setup
 
-There are two supported ways to leverage this project. **Either way, `dev-instructions/ai-instructions/` should live in (and ship with) your codebase** so the knowledge and instructions follow your work product.
+There are two supported ways to leverage this project. **Either way, `ai-instructions/` should live in (and ship with) your codebase** so the knowledge and instructions follow your work product.
 
 #### Option 1 (Recommended first): Read-only Git submodule
 Use this repository as a **read-only** dependency inside your project, so you can adopt the standards quickly and decide later whether you want to maintain your own fork.
@@ -62,7 +67,7 @@ From your project repo root:
 
 ```bash
 # Add as a submodule (pick either HTTPS or SSH URL)
-git submodule add https://github.com/M-A-Operating-System/ai-coding-standards dev-instructions
+git submodule add https://github.com/M-A-Operating-System/ai-coding-standards ai-coding-standards
 
 # Initialize/update submodules on new clones
 git submodule update --init --recursive
@@ -75,7 +80,7 @@ Guidance:
 If you think you want to clone and maintain independently, start with the submodule approach for a sprint or two first—then make the fork/ownership decision with real usage data.
 
 #### Option 2: Clone and maintain independently
-Clone this repo into a folder (or copy `dev-instructions/` into your repo) and take ownership of evolving the content.
+Clone this repo into a folder (or copy `ai-instructions/` into your repo) and take ownership of evolving the content.
 
 Guidance:
 - Use this if you know you need to tailor standards heavily to your org/tooling.
@@ -85,7 +90,7 @@ Guidance:
 
 When starting a new session with an AI coding assistant, provide the following context:
 
-1.  **Primary Instruction**: "Read `dev-instructions/ai-instructions/persona_standards.md` to map your persona."
+1.  **Primary Instruction**: "Read `ai-instructions/persona_standards.md` to map your persona."
 2.  **Activation**:
     *   "Act as **Developer**" (Default: Implementation & Architecture)
     *   "Act as **Product Manager**" (Requirements & User Stories)
@@ -95,14 +100,28 @@ When starting a new session with an AI coding assistant, provide the following c
   *   "Act as **DevOps Engineer**" (CI/CD, reliability, observability)
   *   "Act as **Cloud Engineer**" (Cloud architecture, IaC, IAM/networking)
 
-### Confluence Integration
+### Integrations
 
-This project includes scripts to sync documentation with Atlassian Confluence:
+This project includes scripts to sync documentation and data with external tools:
 
-*   **Download**: `dev-instructions/scripts/download_confluence.py` - Fetches pages as XHTML/HTML to `ai-agile/01_source-material/confluence`.
-*   **Upload**: `dev-instructions/scripts/upload_confluence.py` - Pushes updates back to Confluence.
+#### Confluence
+*   **Download**: `scripts/download_confluence.py` - Fetches pages as XHTML/HTML to `ai-agile/01_source-material/confluence`.
+*   **Upload**: `scripts/upload_confluence.py` - Pushes updates back to Confluence.
 
-The **Product Manager** persona is trained to use these scripts for requirements gathering.
+#### Jira
+*   **Download**: `scripts/download_jira.py` - Fetches Jira issues and metadata.
+*   **Upload**: `scripts/upload_jira.py` - Pushes updates back to Jira.
+
+#### Figma
+*   **Download**: `scripts/download_figma.py` - Fetches Figma design assets.
+
+#### Git Activity
+*   **Report**: `scripts/download_gitActivity.py` - Fetches Git activity for reporting and analysis.
+
+#### Initialization
+*   **Setup**: `scripts/initialize.py` - Bootstraps the `ai-agile/` workspace configuration.
+
+The **Product Manager** persona is trained to use these scripts for requirements gathering and documentation sync. See `ai-instructions/skills/confluence_sync.md` for workflow details.
 
 ### The "What" vs. "How" Philosophy
 
@@ -124,7 +143,7 @@ This project separates universal principles from specific implementations:
 It is now a **primary responsibility of the Development Manager** to take ownership of these master prompt files. This includes:
 
 1. **Management**: Regularly reviewing and updating the content to reflect evolving team standards and technology choices.
-2. **Alignment**: Ensuring the instructions in `dev-instructions/` accurately represent the architectural and security requirements of the specific application.
+2. **Alignment**: Ensuring the instructions in `ai-instructions/` accurately represent the architectural and security requirements of the specific application.
 3. **Enforcement**: Verifying that the team (and their AI agents) are utilizing these standards during development.
 
 ## 🛠 Contributing
@@ -136,5 +155,5 @@ We welcome contributions and feedback through either of these paths:
 2. **Direct Commit Suggestions** (recommended for small, concrete improvements):
   - Propose specific text/code edits as commit-ready suggestions (small, focused, easy to review).
 
-1. **Global Changes**: Edit files in `dev-instructions/` for rules that apply to all languages.
-2. **Language Changes**: Edit files in `dev-instructions/ai-instructions/languages/<lang>/` for syntax or tool-specific updates.
+1. **Global Changes**: Edit files in `ai-instructions/` for rules that apply to all languages.
+2. **Language Changes**: Edit files in `ai-instructions/languages/<lang>/` for syntax or tool-specific updates.
