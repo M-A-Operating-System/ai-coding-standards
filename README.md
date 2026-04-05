@@ -34,9 +34,27 @@ The goal of this project is to ensure that all AI-generated code and documentati
 │   ├── data_standards.md
 │   ├── forbidden_standards.md
 │   ├── compliance_checklist.md
-│   ├── personas/                  # 🎭 Role definitions (Developer, PM, QA, Data, DevOps, Cloud, Delivery)
+│   ├── personas/                  # 🎭 Role definitions
+│   │   ├── developer.md           # Senior Principal Engineer (default)
+│   │   ├── product_manager.md     # Technical PM
+│   │   ├── quality_engineer.md    # Lead SDET (QA)
+│   │   ├── data_scientist.md      # Principal Data Scientist
+│   │   ├── project_manager.md     # Senior Project Manager
+│   │   ├── devops_engineer.md     # Principal DevOps Engineer
+│   │   └── cloud_engineer.md      # Principal Cloud Engineer
 │   ├── skills/                    # Reusable prompt-engineering skills (skill cards)
+│   │   ├── agents.md              # AI agent usage patterns
+│   │   ├── code_review.md
+│   │   ├── requirements_gathering.md
+│   │   ├── confluence_sync.md
+│   │   ├── security_review.md
+│   │   ├── test_case_generation.md
+│   │   └── ...                    # Additional skill cards
 │   ├── prompt_templates/          # Templates for prompt engineering and code review
+│   │   ├── code_review.md
+│   │   ├── repository_maintenance.md
+│   │   ├── reverse_engineer_docs.md
+│   │   └── source_material_review.md
 │   ├── languages/                 # Language-specific "How" (git, powershell, python, typescript)
 │   └── data/                      # Database-specific "How" (e.g., postgres)
 └── scripts/                       # Automation tools for Confluence, Jira, Figma, and Git integration
