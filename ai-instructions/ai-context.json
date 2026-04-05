@@ -13,9 +13,17 @@
     "frontend": "./frontend_standards.md",
     "tools": "./tools_standards.md",
     "common_scenarios": "./common_scenarios.md",
-    "forbidden": "./forbidden_standards.md"
+    "forbidden": "./forbidden_standards.md",
+    "compliance_checklist": "./compliance_checklist.md"
   },
   "languages": {
+    "git": {
+      "root": "./languages/git/ops_how.md",
+      "architecture": "./languages/git/architecture_how.md",
+      "api": "./languages/git/api_how.md",
+      "data": "./languages/git/data_how.md",
+      "documentation": "./languages/git/documentation_how.md"
+    },
     "python": {
       "root": "./languages/python/master_standards.md",
       "style": "./languages/python/coding_standards.md",
