@@ -14,36 +14,40 @@ The goal of this project is to ensure that all AI-generated code and documentati
 
 ## 📂 Repository Structure
 
+The core documentation is located in `dev-instructions/`.
+
 ```text
 .
 ├── README.md                   # This file
-├── ai-instructions/            # The knowledge base for AI (standards, skills, personas)
-│   ├── llms.txt                # Documentation map / quick routing (start here if lost)
-│   ├── ai-context.json         # Machine-readable context map
-│   ├── persona_standards.md    # 🚀 ENTRY POINT: Persona selection + routing
-│   ├── master_standards.md     # Global standards (security-first, plan-of-action, permission gate)
-│   ├── common_scenarios.md     # Situation-based workflows (review/refactor/security/docs/etc.)
-│   ├── security_standards.md
-│   ├── testing_standards.md
-│   ├── ops_standards.md
-│   ├── documentation_standards.md
-│   ├── tools_standards.md
-│   ├── architecture_standards.md
-│   ├── api_standards.md
-│   ├── frontend_standards.md
-│   ├── data_standards.md
-│   ├── forbidden_standards.md
-│   ├── compliance_checklist.md
-│   ├── personas/               # 🎭 Role definitions (Developer, PM, QA, Data, DevOps, Cloud, Delivery)
-│   ├── skills/                 # Reusable prompt-engineering skills (skill cards)
-│   ├── languages/              # Language-specific "How" (e.g., python, typescript, powershell, git)
-│   └── data/                   # Database-specific "How" (e.g., postgres)
-└── scripts/                    # Automation tools (e.g., Confluence sync)
-    ├── download_confluence.py
-    └── upload_confluence.py
+└── dev-instructions/
+    ├── ai-instructions/         # The knowledge base for AI (standards, skills, personas)
+    │   ├── llms.txt             # Documentation map / quick routing (start here if lost)
+    │   ├── ai-context.json      # Machine-readable context map
+    │   ├── persona_standards.md # 🚀 ENTRY POINT: Persona selection + routing
+    │   ├── master_standards.md  # Global standards (security-first, plan-of-action, permission gate)
+    │   ├── common_scenarios.md  # Situation-based workflows (review/refactor/security/docs/etc.)
+    │   ├── security_standards.md
+    │   ├── testing_standards.md
+    │   ├── ops_standards.md
+    │   ├── documentation_standards.md
+    │   ├── tools_standards.md
+    │   ├── architecture_standards.md
+    │   ├── api_standards.md
+    │   ├── frontend_standards.md
+    │   ├── data_standards.md
+    │   ├── forbidden_standards.md
+    │   ├── personas/            # 🎭 Role definitions (Developer, PM, QA, Data, DevOps, Cloud, Delivery)
+    │   ├── skills/              # Reusable prompt-engineering skills (skill cards)
+    │   ├── languages/           # Language-specific “How” (e.g., python, ...)
+    │   └── data/                # Database-specific “How” (e.g., postgres, ...)
+    └── scripts/                 # Automation tools (e.g., Confluence sync)
+        ├── download_confluence.py
+        └── upload_confluence.py
 ```
 
-> **When used as a Git submodule** (the recommended setup — see "Project Setup" below), the entire contents of this repository live under `dev-instructions/` inside the consuming project, so all paths above become `dev-instructions/ai-instructions/…` and `dev-instructions/scripts/…`.
+Notes:
+- `ai-instructions/languages/` contains language-specific implementation guidance (the “How”) that supports the global standards (the “What”).
+- `ai-instructions/data/` contains database-specific implementation guidance (the “How”) that supports `data_standards.md`.
 
 ## 🚀 How to Use
 
