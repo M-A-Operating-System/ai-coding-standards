@@ -1,7 +1,3 @@
-
-## Coverage Reporting
-- **Threshold**: Minimum 80% code coverage required for PR approval.
-- **Reporting Tools**: Use `vitest` or `jest` with coverage enabled and integrate with Coveralls or Codecov for CI reporting.
 # TypeScript Testing Standards
 Implementation of: /testing_standards.md
 
@@ -17,6 +13,10 @@ This file provides the TypeScript-specific implementation ("How") for the testin
 - **Isolation**: Reset mocks between tests (`mockReset` / `clearMocks`).
 - **Factories**: Use helper functions to generate test data, do not hardcode large objects.
 - **Network**: Use `msw` (Mock Service Worker) for HTTP mocking or mock the service layer directly.
+
+## Coverage Reporting
+- **Threshold**: Minimum 80% code coverage required for PR approval.
+- **Reporting Tools**: Use `vitest` or `jest` with coverage enabled and integrate with Coveralls or Codecov for CI reporting.
 
 ## Example: Unit Test (Vitest)
 ```typescript

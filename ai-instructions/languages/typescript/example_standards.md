@@ -37,10 +37,12 @@ export const createItem = async (req: Request, res: Response, next: NextFunction
     // GOOD: logger.info({ msg: 'creating_item', name: data.name });
 
     const newItem = await itemService.create(data);
-    
+    res.status(201).json(newItem);
+  } catch (error) {
+    next(error);
+  }
+};
 ```
-
----
 
 ## Template 3: React Functional Component (Strict Typing)
 ```tsx
@@ -72,14 +74,9 @@ test('calls onClick when clicked', () => {
   fireEvent.click(screen.getByText('Click me'));
   expect(handleClick).toHaveBeenCalledTimes(1);
 });
-    res.status(201).json(newItem);
-  } catch (error) {
-    next(error);
-  }
-};
 ```
 
-## Template 3: package.json Scripts
+## Template 5: package.json Scripts
 ```json
 {
   "scripts": {

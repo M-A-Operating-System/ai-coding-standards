@@ -31,3 +31,4 @@
 - [Python Standards](languages/python/master_standards.md) - Python-specific implementation details.
 - [TypeScript Standards](languages/typescript/master_standards.md) - TypeScript-specific implementation details.
 - [PowerShell Standards](languages/powershell/master_standards.md) - PowerShell-specific implementation details.
+- [Git/CI Standards](languages/git/ops_how.md) - Git workflow and CI/CD pipeline implementation details.
