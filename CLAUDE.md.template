@@ -1,0 +1,115 @@
+# CLAUDE.md
+
+> **Extended project template** — use this when you need to add project-specific context  
+> (build commands, architecture notes, custom conventions) on top of the base standards.  
+> For minimal setup, copy `ai-coding-standards/CLAUDE.md` directly to your project root instead.  
+> Submodule path: `ai-coding-standards/`
+
+---
+
+## Project Overview
+
+<!-- TODO: Describe this project in 2-3 sentences. -->
+
+---
+
+## AI Coding Standards (Submodule)
+
+This project uses the [ai-coding-standards](ai-coding-standards/) Git submodule.
+All AI coding standards, personas, and skills are loaded from that submodule.
+
+### Standards — Load Order
+
+When writing, reviewing, or refactoring any code, load these in order:
+
+@ai-coding-standards/ai-instructions/persona_standards.md
+@ai-coding-standards/ai-instructions/master_standards.md
+@ai-coding-standards/ai-instructions/forbidden_standards.md
+
+For language-specific work, also load:
+
+- Python: `@ai-coding-standards/ai-instructions/languages/python/master_standards.md`
+- TypeScript: `@ai-coding-standards/ai-instructions/languages/typescript/master_standards.md`
+- PowerShell: `@ai-coding-standards/ai-instructions/languages/powershell/master_standards.md`
+
+For a full standards map: `@ai-coding-standards/ai-instructions/llms.txt`
+
+---
+
+## Personas
+
+Activate a persona by telling Claude: _"Act as the [persona name] persona."_
+
+| Intent | Persona | Activate with |
+|--------|---------|---------------|
+| Code, architecture, debugging | Developer | `Act as the Developer persona` |
+| Requirements, user stories, docs | Product Manager | `Act as the Product Manager persona` |
+| Tests, security audit, QA | Quality Engineer | `Act as the Quality Engineer persona` |
+| CI/CD, pipelines, observability | DevOps Engineer | `Act as the DevOps Engineer persona` |
+| Cloud infra, IaC, networking | Cloud Engineer | `Act as the Cloud Engineer persona` |
+| Data analysis, ML, experiments | Data Scientist | `Act as the Data Scientist persona` |
+| Delivery planning, milestones | Project Manager | `Act as the Project Manager persona` |
+
+Default (no persona stated): **Developer**.
+
+---
+
+## Change Control
+
+Before ANY file write or command that mutates state:
+1. Propose the exact files + changes
+2. Wait for explicit user approval
+3. Only then execute
+
+See `@ai-coding-standards/ai-instructions/master_standards.md` §3 for the full rule.
+
+---
+
+## Build & Test Commands
+
+<!-- TODO: Replace with actual project commands. -->
+
+```bash
+# Install dependencies
+# e.g. pip install -r requirements.txt
+# e.g. npm ci
+
+# Build
+# e.g. npm run build
+
+# Run tests
+# e.g. pytest --cov
+# e.g. npm test
+
+# Lint / type-check
+# e.g. ruff check . && mypy .
+# e.g. npm run lint
+```
+
+---
+
+## Key Directories
+
+<!-- TODO: Describe the project layout. -->
+| Path | Purpose |
+|------|---------|
+| `ai-coding-standards/` | AI standards submodule (read-only in project context) |
+| *(add your project dirs here)* | |
+
+---
+
+## Architecture Notes
+
+<!-- TODO: Key patterns, ADR links, system boundaries. -->
+
+---
+
+## Submodule Maintenance
+
+```bash
+# Pull latest standards
+git submodule update --remote ai-coding-standards
+
+# Initial clone (includes submodule)
+git clone --recurse-submodules <repo-url>
+```

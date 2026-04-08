@@ -4,8 +4,10 @@
 # Global Entry Point
 - [Persona Selection Standards](persona_standards.md) - START HERE. Select the active persona and apply standards through that lens.
 - [Master Standards](master_standards.md) - Global rules (security-first priorities, permission gate, doc hierarchy).
+- [AI PDLC Standards](pdlc_standards.md) - Design First gate, issue tracking, Enhancement vs Bug rules, specifiable/testable requirements. Load for any implementation request.
 
 # Situation-Based Routing (Recommended)
+0) **Design First Gate**: For any implementation task, verify issue reference and design sign-off via `pdlc_standards.md` and `skills/design_review.md` BEFORE selecting a scenario.
 1) **Select Persona**: Use `persona_standards.md`, then load the corresponding file under `personas/`.
 2) **Identify the Situation**: Use `common_scenarios.md` to pick the right workflow (review, refactor, security audit, docs, deployment).
 3) **Pick the Implementation Layer**:
@@ -15,6 +17,7 @@
 5) **Reuse Skills**: Prefer the reusable patterns in `skills/` and orchestration patterns in `skills/agents.md`.
 
 # Core Standards (The "What")
+- [AI PDLC Standards](pdlc_standards.md) - Design First, issue tracking, Enhancement vs Bug, specifiable/testable requirements.
 - [Architecture Standards](architecture_standards.md) - The Five-View Architecture framework.
 - [Security Standards](security_standards.md) - OWASP/NIST controls and security requirements.
 - [Testing Standards](testing_standards.md) - Testing strategies, pyramids, and quality gates.

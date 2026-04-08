@@ -3,6 +3,7 @@
   "description": "Coding Standards and Guidelines for AI Agents",
   "entry_point": "./persona_standards.md",
   "standards": {
+    "pdlc": "./pdlc_standards.md",
     "architecture": "./architecture_standards.md",
     "security": "./security_standards.md",
     "testing": "./testing_standards.md",
@@ -47,7 +48,7 @@
       "style": "./data/postgres/data_standards.md"
     }
   },
-  "instructions": "Start by selecting an active persona via persona_standards.md and loading its persona file under personas/. When generating code, identify the target language, then load the 'root' instruction file for that language. Always cross-reference with the global 'standards' files. Also reference the 'skills/' folder and 'skills/agents.md' for reusable prompt engineering skills and agent orchestration patterns.",
+  "instructions": "For any implementation task, first verify the Design First gate: check pdlc_standards.md §6 and run skills/design_review.md. Then select an active persona via persona_standards.md and load its persona file under personas/. When generating code, identify the target language, then load the 'root' instruction file for that language. Always cross-reference with the global 'standards' files. Also reference the 'skills/' folder and 'skills/agents.md' for reusable prompt engineering skills and agent orchestration patterns.",
   "skills": "./skills/",
   "agents": "./skills/agents.md"
 }
