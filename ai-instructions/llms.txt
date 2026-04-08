@@ -34,9 +34,4 @@
 - [Python Standards](languages/python/master_standards.md) - Python-specific implementation details.
 - [TypeScript Standards](languages/typescript/master_standards.md) - TypeScript-specific implementation details.
 - [PowerShell Standards](languages/powershell/master_standards.md) - PowerShell-specific implementation details.
-
-# Issue Management Skills
-- [Create Issue](skills/create_issue.md) - Open a new work item with correct PDLC tags and mandatory fields.
-- [Read Issue](skills/read_issue.md) - Extract and validate all fields and tags from an existing work item.
-- [Update Issue](skills/update_issue.md) - Modify fields and tags following PDLC tag mutation rules.
-- [Cancel Issue](skills/cancel_issue.md) - Close a work item as cancelled, preserving the full audit trail.
+- [Git/CI Standards](languages/git/ops_how.md) - Git workflow and CI/CD pipeline implementation details.
